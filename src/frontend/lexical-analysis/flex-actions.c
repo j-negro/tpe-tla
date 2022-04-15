@@ -12,6 +12,13 @@ TokenID IntegerPatternAction(const char * lexeme) {
 	return INTEGER;
 }
 
+
+TokenID NotePatternAction(const char * lexeme) {
+	LogDebug("NotePatternAction: '%s'.", lexeme);
+	// yylval = atoi(lexeme);
+	return NOTE;
+}
+
 void IgnoredPatternAction(const char * lexeme) {
 	LogDebug("IgnoredPatternAction: '%s'.", lexeme);
 }
@@ -19,4 +26,9 @@ void IgnoredPatternAction(const char * lexeme) {
 TokenID UnknownPatternAction(const char * lexeme) {
 	LogDebug("UnknownPatternAction: '%s'.", lexeme);
 	return YYUNDEF;
+}
+
+TokenID VariablePatternAction(const char * lexeme) {
+	LogDebug("VariablePatternAction: '%s'.", lexeme);
+	return VARIABLE;
 }

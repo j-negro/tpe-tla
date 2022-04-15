@@ -23,8 +23,12 @@ int FactorExpressionGrammarAction(const int value);
 // Factores.
 int ExpressionFactorGrammarAction(const int value);
 int ConstantFactorGrammarAction(const int value);
+int VariableFactorGrammarAction(const int value);
 
 // Constantes.
 int IntegerConstantGrammarAction(const int value);
+
+// Variables.
+int NoteVariableGrammarAction(const int value);
 
 #endif

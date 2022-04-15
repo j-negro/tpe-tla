@@ -65,3 +65,13 @@ int IntegerConstantGrammarAction(const int value) {
 	LogDebug("IntegerConstantGrammarAction(%d)", value);
 	return value;
 }
+
+int NoteVariableGrammarAction(const int value) {
+	LogDebug("NoteVariableGrammarAction(%d)", value);
+	return value;
+}
+
+int VariableFactorGrammarAction(const int value) {
+	LogDebug("VariableFactorGrammarAction(%d)", value);
+	return value;
+}

@@ -24,12 +24,44 @@ typedef enum TokenID {
 	MUL,
 	DIV,
 
+	// Operadores lógicos
+	AND,
+	OR,
+	NOT,
+	EQUAL,
+	LOWER,
+	GREATER,
+	LOWER_EQUAL,
+	GREATER_EQUAL,
+
+	// Control de flujo
+	IF,
+	ELSE,
+	WHILE,
+	RETURN,
+	
+	// Punctuación
+	SEMICOLON,
+	DOT,
+
 	// Paréntesis.
 	OPEN_PARENTHESIS,
 	CLOSE_PARENTHESIS,
+	OPEN_BRACKETS,
+	CLOSE_BRACKETS,
+
+	// Palabras reservadas
+	TONE,
+	RYTHM,
+	BPM,
 
 	// Tipos de dato.
-	INTEGER
+	INTEGER,
+	MELODY,
+	NOTE,
+	BOOLEAN,
+	VARIABLE
+
 } TokenID;
 
 /**
@@ -44,5 +76,9 @@ TokenID IntegerPatternAction(const char * lexeme);
 void IgnoredPatternAction(const char * lexeme);
 
 TokenID UnknownPatternAction(const char * lexeme);
+
+TokenID NotePatternAction(const char * lexeme);
+
+TokenID VariablePatternAction(const char * lexeme);
 
 #endif
