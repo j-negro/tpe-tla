@@ -1,0 +1,13 @@
+melody melodia BPM 435;
+boolean hola = true;
+boolean chau = false;
+while (!(hola && chau || hola))
+{
+    if (chau) {
+        note nota TONE A#5 RYTHM half;
+    } else {
+        note nota TONE Ab5 RYTHM half;
+    }
+}
+
+return melodia;
