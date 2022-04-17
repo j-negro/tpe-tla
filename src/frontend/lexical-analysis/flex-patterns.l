@@ -34,7 +34,8 @@ char            [a-zA-Z_]
 "*"											{ return MUL; }
 "/"										    { return DIV; }
 
-"&"                                         { return AND; }
+"&&"                                         { return AND; }
+"||"                                          { return OR; }
 "!"                                         { return NOT; }
 "="                                         { return EQUAL; }
 "<"                                         { return LOWER; }
@@ -49,18 +50,22 @@ char            [a-zA-Z_]
 "while"                                     { return WHILE; }
 "return"                                    { return RETURN;}    
 
-"TONE"                                      { return TONE; }
+"TONE"                                      { return TONE_DEF; }
 "BPM"                                       { return BPM; }
-"RYTHM"                                     { return RYTHM;}
+"RYTHM"                                     { return RYTHM_DEF;}
 
-"int"                                       { return INTEGER; }
-"boolean"                                   { return BOOLEAN; }
+"int"                                       { return INTEGER_DEF; }
+"boolean"                                   { return BOOLEAN_DEF; }
 "melody"                                    { return MELODY; }
 "note"                                      { return NOTE; }
 
-[A-G][2-6]                                  { return NotePatternAction(yytext); }
+false|true                                  { return BOOLEAN; }
 
-{char}+                                     { return VariablePatternAction(yytext) }
+[A-G][#b]?[2-6]                                  { return TonePatternAction(yytext); }
+
+whole|half|quarter|eight|sixteenth|thirtySecond|sixtyFourth   { return RythmPatternAction(yytext); }
+
+{char}+                                     { return VariablePatternAction(yytext); }
 
 {digit}+									{ return IntegerPatternAction(yytext); }
 

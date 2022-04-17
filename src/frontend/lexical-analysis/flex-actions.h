@@ -52,13 +52,17 @@ typedef enum TokenID {
 
 	// Palabras reservadas
 	TONE,
+	TONE_DEF,
 	RYTHM,
+	RYTHM_DEF,
 	BPM,
 
 	// Tipos de dato.
+	INTEGER_DEF,
 	INTEGER,
 	MELODY,
 	NOTE,
+	BOOLEAN_DEF,
 	BOOLEAN,
 	VARIABLE
 
@@ -77,7 +81,9 @@ void IgnoredPatternAction(const char * lexeme);
 
 TokenID UnknownPatternAction(const char * lexeme);
 
-TokenID NotePatternAction(const char * lexeme);
+TokenID TonePatternAction(const char * lexeme);
+
+TokenID RythmPatternAction(const char * lexeme);
 
 TokenID VariablePatternAction(const char * lexeme);
 

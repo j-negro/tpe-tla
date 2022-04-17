@@ -40,61 +40,95 @@
 
 // Palabras reservadas
 %token TONE
+%token TONE_DEF
 %token RYTHM
+%token RYTHM_DEF
 %token BPM
 
 // Tipos de dato.
-%token INTEGER,
-%token MELODY,
-%token NOTE,
-%token BOOLEAN,
-%token CONST
+%token INTEGER_DEF
+%token INTEGER
+%token MELODY
+%token NOTE
+%token BOOLEAN_DEF
+%token BOOLEAN
+%token VARIABLE
 
 // Reglas de asociatividad y precedencia (de menor a mayor):
 %left ADD SUB
 %left MUL DIV
 
+// TODO No estoy seguro si esta bien
+%left AND OR
+%left NOT
+
 %%
 
-program: block RETURN MELODY SEMICOLON											{ $$ = ProgramGrammarAction($1); }
+program: code returnLine									{ ProgramGrammarAction($1); }
 	;
 
-block: OPEN_BRACKETS block CLOSE_BRACKETS
-	| OPEN_BRACKETS expression CLOSE_BRACKETS
-	| 
-	;
-	
-sentence: NOTE variable EQUAL expression SEMICOLON
+returnLine: RETURN variableName SEMICOLON
+	| RETURN musicTypeDefinition SEMICOLON
 	;
 
-declaration: NOTE VARIABLE EQUAL 
-	;
- 
-
-expression: expression ADD expression							{ $$ = AdditionExpressionGrammarAction($1, $3); }
-	| expression SUB expression									{ $$ = SubtractionExpressionGrammarAction($1, $3); }
-	| expression MUL expression									{ $$ = MultiplicationExpressionGrammarAction($1, $3); }
-	| expression DIV expression									{ $$ = DivisionExpressionGrammarAction($1, $3); }
-	| 
-	| factor													{ $$ = FactorExpressionGrammarAction($1); }
+code: line code
+	| line
 	;
 
-
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS			{ $$ = ExpressionFactorGrammarAction($2); }
-	| constant													{ $$ = ConstantFactorGrammarAction($1); }
-	| variable													{ $$ = VariableFactorGrammarAction($1); }
+line: typeDefinition SEMICOLON
+	| assigment SEMICOLON
+	| musicTypeDefinition SEMICOLON
+	| musicAssigment SEMICOLON
+	| ifStatement
+	| whileStatement
 	;
 
-constant: INTEGER 												{ $$ = IntegerConstantGrammarAction($1); }
+ifStatement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block
+	| ifStatement ELSE block
+	;
+
+whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block
+	;
+
+block: OPEN_BRACKETS code CLOSE_BRACKETS
+	;
+
+expression: BOOLEAN
+	| variableName
+	| expression AND expression
+	| expression OR expression
+	| NOT expression
+	| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
+	;
+
+assigment: typeDefinition EQUAL value
+	| variableName EQUAL value
+	;
+
+musicAssigment: musicTypeDefinition TONE_DEF TONE
+	| musicTypeDefinition RYTHM_DEF RYTHM
+	| musicTypeDefinition BPM INTEGER
+	| variableName TONE_DEF TONE
+	| variableName RYTHM_DEF RYTHM
+	| variableName BPM INTEGER
+	| musicAssigment TONE_DEF TONE
+	| musicAssigment RYTHM_DEF RYTHM
+	| musicAssigment BPM INTEGER
+	;
+
+typeDefinition: BOOLEAN_DEF variableName
+	| INTEGER_DEF variableName
+	;
+
+musicTypeDefinition: MELODY variableName
+	| NOTE variableName
+	;
+
+value: INTEGER
 	| BOOLEAN
-	| MELODY
-	| NOTE
-
 	;
 
-variable: NOTE 													{ $$ = NoteVariableGrammarAction($1); }
-	| MELODY
+variableName: VARIABLE
 	;
-
 
 %%
