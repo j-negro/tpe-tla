@@ -1,0 +1,7 @@
+melody melodia BPM 100;
+
+note DO TONE C4 RYTHM whole;
+
+DO add melodia;
+
+return melodia;
