@@ -1,0 +1,28 @@
+int i = 0;
+melody melodia BPM 180;
+
+while (i < 4) {
+    note nota TONE A#5 RYTHM half;
+    melodia add nota;
+}
+
+i = 0;
+melody melodia_B BPM 180;
+
+while (i < 4) {
+    note nota TONE C5 RYTHM half;
+    melodia_B add nota;
+}
+
+int time = 0;
+int timeInterval = 2;
+int nextTime = time + timeInterval;
+
+while (time < melodia_A duration) {
+    if (time > nextTime) {
+        melodia_A add melodia_B i;
+    }
+    time = time + timeInterval;
+}
+
+return melodia_A;

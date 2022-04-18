@@ -59,6 +59,10 @@ typedef enum TokenID {
 	RYTHM_DEF,
 	BPM,
 	ADD,
+	RAISE_OCTAVE,
+	LOWER_TONE,
+	REMOVE,
+	DURATION,
 
 	// Tipos de dato.
 	INTEGER_DEF,

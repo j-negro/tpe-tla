@@ -61,6 +61,10 @@ char            [a-zA-Z_]
 "melody"                                    { return MELODY; }
 "note"                                      { return NOTE; }
 "add"                                       { return ADD; }
+"raiseOctave"                               { return RAISE_OCTAVE; }
+"lowerTone"                                 { return LOWER_TONE; }
+"remove"                                    { return REMOVE; }
+"duration"                                  { return DURATION; }
 
 false|true                                  { return BOOLEAN; }
 

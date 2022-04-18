@@ -1,0 +1,9 @@
+melody melodia BPM 180;
+note nota_A TONE A#5 RYTHM half;
+note nota_B TONE A#5 RYTHM half;
+melodia add nota_A;
+melodia add nota_B;
+
+melodia BPM melodia.BPM * 2;
+
+return melodia;

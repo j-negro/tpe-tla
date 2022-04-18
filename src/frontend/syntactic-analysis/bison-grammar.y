@@ -47,6 +47,10 @@
 %token RYTHM_DEF
 %token BPM
 %token ADD
+%token RAISE_OCTAVE
+%token LOWER_TONE
+%token REMOVE
+%token DURATION
 
 // Tipos de dato.
 %token INTEGER_DEF
@@ -141,6 +145,10 @@ musicAssigment: musicTypeDefinition TONE_DEF TONE
 	| musicAssigment TONE_DEF TONE
 	| musicAssigment RYTHM_DEF RYTHM
 	| musicAssigment BPM calculation
+	| variableName RAISE_OCTAVE
+	| variableName LOWER_TONE
+	| variableName REMOVE integer
+	| variableName ADD variableName integer
 	;
 
 typeDefinition: BOOLEAN_DEF variableName
@@ -170,6 +178,7 @@ calculation: calculation PLUS calculation
 integer: INTEGER
 	| variableName DOT BPM
 	| variableName
+	| variableName DURATION
 	;
 
 variableName: VARIABLE
