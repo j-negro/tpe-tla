@@ -29,7 +29,7 @@ char            [a-zA-Z_]
 
 "."                                         { return DOT; }
 
-"+"											{ return ADD; }
+"+"											{ return PLUS; }
 "-"											{ return SUB; }
 "*"											{ return MUL; }
 "/"										    { return DIV; }
@@ -38,6 +38,8 @@ char            [a-zA-Z_]
 "||"                                          { return OR; }
 "!"                                         { return NOT; }
 "="                                         { return EQUAL; }
+"=="                                        { return EQUAL_EQUAL; }
+"!="                                        { return NOTEQUAL; }
 "<"                                         { return LOWER; }
 ">"                                         { return GREATER; }
 "<="                                        { return LOWER_EQUAL; }
@@ -58,6 +60,7 @@ char            [a-zA-Z_]
 "boolean"                                   { return BOOLEAN_DEF; }
 "melody"                                    { return MELODY; }
 "note"                                      { return NOTE; }
+"add"                                       { return ADD; }
 
 false|true                                  { return BOOLEAN; }
 

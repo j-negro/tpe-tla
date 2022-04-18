@@ -19,7 +19,7 @@ typedef enum TokenID {
 	YYUNDEF = 257,
 
 	// Operadores aritméticos.
-	ADD,
+	PLUS,
 	SUB,
 	MUL,
 	DIV,
@@ -29,6 +29,8 @@ typedef enum TokenID {
 	OR,
 	NOT,
 	EQUAL,
+	EQUAL_EQUAL,
+	NOTEQUAL,
 	LOWER,
 	GREATER,
 	LOWER_EQUAL,
@@ -56,6 +58,7 @@ typedef enum TokenID {
 	RYTHM,
 	RYTHM_DEF,
 	BPM,
+	ADD,
 
 	// Tipos de dato.
 	INTEGER_DEF,

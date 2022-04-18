@@ -1,13 +1,19 @@
 melody melodia BPM 435;
 boolean hola = true;
-boolean chau = false;
+boolean chau = hola;
+int pepe = 0;
 while (!(hola && chau || hola))
 {
-    if (chau) {
+    note notita TONE A4 RYTHM whole;
+    if (nota.TONE == A5) {
         note nota TONE A#5 RYTHM half;
     } else {
         note nota TONE Ab5 RYTHM half;
     }
+    if (melodia.BPM == pepe + 465) {
+
+    }
+    melodia add nota;
 }
 
 return melodia;
