@@ -1,0 +1,14 @@
+int i = 0;
+melody melodia_A BPM 180;
+note nota_A TONE A#5 RYTHM half;
+melodia_A add nota_A;
+
+while (i < 4) {
+    melody melodia_B BPM 180;
+    note nota_B TONE A#5 RYTHM half;
+    melodia_B add nota_B;
+
+    melodia_A = melodia_A + melodia_B;
+}
+
+return melodia_A;
