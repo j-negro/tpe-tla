@@ -101,28 +101,28 @@ block: OPEN_BRACKETS code CLOSE_BRACKETS
 	;
 
 expression: BOOLEAN
-	| variableName
-	| comparison
-	| expression AND expression
-	| expression OR expression
-	| NOT expression
+	| variableName									{$$ = VariableNameExpressionGrammarAction($1);}
+	| comparison									{$$ = ComparisonExpressionGrammarAction($1);}
+	| expression AND expression						{$$ = BooleanAndExpressionGrammarAction($1, $3);}
+	| expression OR expression						{$$ = BooleanOrExpressionGrammarAction($1, $3);}
+	| NOT expression								{$$ = BooleanNotExpressionGrammarAction($2);}
 	| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
 	;
 
-comparison: rythm EQUAL_EQUAL rythm
-	| rythm NOTEQUAL rythm
-	| tone EQUAL_EQUAL tone
-	| tone NOTEQUAL tone
-	| tone LOWER tone
-	| tone GREATER tone
-	| tone LOWER_EQUAL tone
-	| tone GREATER_EQUAL tone
-	| calculation EQUAL_EQUAL calculation
-	| calculation NOTEQUAL calculation
-	| calculation LOWER calculation
-	| calculation GREATER calculation
-	| calculation LOWER_EQUAL calculation
-	| calculation GREATER_EQUAL calculation
+comparison: rythm EQUAL_EQUAL rythm 				{$$ = RythmEqualComparisonGrammarAction($1, $3 );}
+	| rythm NOTEQUAL rythm							{$$ = RythmNotEqualComparisonGrammarAction($1, $3);}
+	| tone EQUAL_EQUAL tone							{$$ = ToneEqualComparisonGrammarAction($1, $3);}
+	| tone NOTEQUAL tone							{$$ = ToneNotEqualComparisonGrammarAction($1, $3);}
+	| tone LOWER tone								{$$ = ToneLowerComparisonGrammarAction($1, $3);}
+	| tone GREATER tone								{$$ = ToneGreaterComparisonGrammarAction($1, $3);}
+	| tone LOWER_EQUAL tone							{$$ = ToneLowerEqualComparisonGrammarAction($1, $3);}
+	| tone GREATER_EQUAL tone						{$$ = ToneGreaterEqualComparisonGrammarAction($1, $3);}
+	| calculation EQUAL_EQUAL calculation			{$$ = CalculationEqualComparisonGrammarAction($1, $3);}
+	| calculation NOTEQUAL calculation				{$$ = CalculationNotEqualComparisonGrammarAction($1, $3);}
+	| calculation LOWER calculation					{$$ = CalculationLowerComparisonGrammarAction($1, $3);}
+	| calculation GREATER calculation				{$$ = CalculationGreaterComparisonGrammarAction($1, $3);}
+	| calculation LOWER_EQUAL calculation			{$$ = CalculationLowerEqualComparisonGrammarAction($1, $3);}
+	| calculation GREATER_EQUAL calculation			{$$ = CalculationGreaterEqualComparisonGrammarAction($1, $3);}
 	;
 
 // Backend chequea que las variables existan y sean la primera de tipo melody y la segunda de tipo note.
