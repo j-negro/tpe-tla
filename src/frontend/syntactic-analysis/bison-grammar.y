@@ -90,11 +90,11 @@ line: typeDefinition SEMICOLON
 	| whileStatement
 	;
 
-ifStatement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block
-	| ifStatement ELSE block
+ifStatement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block	 {$$ = ifStatementGrammarAction($3,$5);}
+	| ifStatement ELSE block                      
 	;
 
-whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block
+whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block  {$$ = WhileStatementGrammarAction($3,$5);}
 	;
 
 block: OPEN_BRACKETS code CLOSE_BRACKETS
@@ -136,19 +136,19 @@ assigment: BOOLEAN_DEF variableName EQUAL expression
 	| variableName EQUAL calculation
 	;
 
-musicAssigment: musicTypeDefinition TONE_DEF TONE
-	| musicTypeDefinition RYTHM_DEF RYTHM
-	| musicTypeDefinition BPM calculation
-	| variableName TONE_DEF TONE
-	| variableName RYTHM_DEF RYTHM
-	| variableName BPM calculation
-	| musicAssigment TONE_DEF TONE
-	| musicAssigment RYTHM_DEF RYTHM
-	| musicAssigment BPM calculation
-	| variableName RAISE_OCTAVE
-	| variableName LOWER_TONE
-	| variableName REMOVE integer
-	| variableName ADD variableName integer
+musicAssigment: musicTypeDefinition TONE_DEF TONE			{$$ = MusicTypeToneDefinitionGrammarAction($1);}
+	| musicTypeDefinition RYTHM_DEF RYTHM					{$$ = MusicTypeRythmDefinitionGrammarAction($1);}
+	| musicTypeDefinition BPM calculation					{$$ = MusicTypeDefinitionGrammarAction($1);}
+	| variableName TONE_DEF TONE							{$$ = VariableToneTypeDefinitionGrammarAction($1);}
+	| variableName RYTHM_DEF RYTHM							{$$ = VariableRythmTypeDefinitionGrammarAction($1);}
+	| variableName BPM calculation							{$$ = VariableBpmTypeDefinitionGrammarAction($1);}
+	| musicAssigment TONE_DEF TONE							{$$ = MusicAssigmentToneDefinitionGrammarAction($1);}
+	| musicAssigment RYTHM_DEF RYTHM						{$$ = MusicAssigmentRythmDefinitionGrammarAction($1);}
+	| musicAssigment BPM calculation						{$$ = MusicAssigmentBpmDefinitionGrammarAction($1);}
+	| variableName RAISE_OCTAVE								{$$ = VariableRaiseOctaveTypeDefinitionGrammarAction($1);}
+	| variableName LOWER_TONE								{$$ = VariableLowerToneDefinitionGrammarAction($1);}
+	| variableName REMOVE integer							{$$ = VariableRemoveIntegerDefinitionGrammarAction($1);}
+	| variableName ADD variableName integer					{$$ = VariableAdditionTypeDefinitionGrammarAction($1);}
 	;
 
 typeDefinition: BOOLEAN_DEF variableName

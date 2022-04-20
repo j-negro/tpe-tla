@@ -50,6 +50,16 @@ int FactorExpressionGrammarAction(const int value) {
 	LogDebug("FactorExpressionGrammarAction(%d)", value);
 	return value;
 }
+//--------------------------------------------Statements------------------------------------------------------------
+int ifStatementGrammarAction(const int leftValue,const int rightValue){
+	LogDebug("IfStatementGrammarAction(%d, %d)", leftValue, rightValue);
+	return 0;
+}
+
+int WhileStatementGrammarAction(const int leftValue,const int rightValue){
+	LogDebug("WhileStatementGrammarAction(%d, %d)", leftValue, rightValue);
+	return 0;
+}
 //--------------------------------------------Expression---------------------------------------------------
 int VariableNameExpressionGrammarAction(const int value){
 	LogDebug("VariableNameExpressionGrammarAction(%d)", value);
@@ -73,6 +83,72 @@ int BooleanOrExpressionGrammarAction(const int leftValue,const int rightValue){
 
 int BooleanNotExpressionGrammarAction(const int value){
 	LogDebug("BooleanNotExpressionGrammarAction(%d)", value);
+	return 0;
+}
+//-------------------------------------------Music Assignment----------------------------------------------
+
+int MusicTypeToneDefinitionGrammarAction(const int value){
+	LogDebug("MusicTypeToneDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int MusicTypeRythmDefinitionGrammarAction(const int value){
+	LogDebug("MusicTypeRythmDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int MusicTypeDefinitionGrammarAction(const int value){
+	LogDebug("MusicTypeDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableToneTypeDefinitionGrammarAction(const int value){
+	LogDebug("VariableToneTypeDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableRythmTypeDefinitionGrammarAction(const int value){
+	LogDebug("VariableRythmTypeDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableBpmTypeDefinitionGrammarAction(const int value){
+	LogDebug("VariableBpmTypeDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int MusicAssigmentToneDefinitionGrammarAction(const int value){
+	LogDebug("MusicAssigmentToneDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int MusicAssigmentRythmDefinitionGrammarAction(const int value){
+	LogDebug("MusicAssigmentRythmDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int MusicAssigmentBpmDefinitionGrammarAction(const int value){
+	LogDebug("MusicAssigmentBpmDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableRaiseOctaveTypeDefinitionGrammarAction(const int value){
+	LogDebug("VariableRaiseOctaveTypeDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableLowerToneDefinitionGrammarAction(const int value){
+	LogDebug("VariableLowerToneDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableRemoveIntegerDefinitionGrammarAction(const int value){
+	LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
+	return 0;
+}
+
+int VariableAdditionTypeDefinitionGrammarAction(const int value){
+	LogDebug("VariableAdditionTypeDefinitionGrammarAction(%d)", value);
 	return 0;
 }
 //--------------------------------------------Comparison---------------------------------------------------
