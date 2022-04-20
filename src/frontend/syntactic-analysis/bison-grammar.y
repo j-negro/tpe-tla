@@ -100,55 +100,45 @@ whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block  {$$ =
 block: OPEN_BRACKETS code CLOSE_BRACKETS
 	;
 
-expression: BOOLEAN
-	| variableName									{$$ = VariableNameExpressionGrammarAction($1);}
-	| comparison									{$$ = ComparisonExpressionGrammarAction($1);}
-	| expression AND expression						{$$ = BooleanAndExpressionGrammarAction($1, $3);}
+expression: expression AND expression						{$$ = BooleanAndExpressionGrammarAction($1, $3);}
 	| expression OR expression						{$$ = BooleanOrExpressionGrammarAction($1, $3);}
 	| NOT expression								{$$ = BooleanNotExpressionGrammarAction($2);}
+	| expression PLUS expression
+	| expression SUB expression
+	| expression MUL expression
+	| expression DIV expression
+	| expression EQUAL_EQUAL expression			{$$ = CalculationEqualComparisonGrammarAction($1, $3);}
+	| expression NOTEQUAL expression				{$$ = CalculationNotEqualComparisonGrammarAction($1, $3);}
+	| expression LOWER expression					{$$ = CalculationLowerComparisonGrammarAction($1, $3);}
+	| expression GREATER expression				{$$ = CalculationGreaterComparisonGrammarAction($1, $3);}
+	| expression LOWER_EQUAL expression			{$$ = CalculationLowerEqualComparisonGrammarAction($1, $3);}
+	| expression GREATER_EQUAL expression			{$$ = CalculationGreaterEqualComparisonGrammarAction($1, $3);}
 	| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
+	| variableName
+	| constant
+	| getter
 	;
 
-comparison: rythm EQUAL_EQUAL rythm 				{$$ = RythmEqualComparisonGrammarAction($1, $3 );}
-	| rythm NOTEQUAL rythm							{$$ = RythmNotEqualComparisonGrammarAction($1, $3);}
-	| tone EQUAL_EQUAL tone							{$$ = ToneEqualComparisonGrammarAction($1, $3);}
-	| tone NOTEQUAL tone							{$$ = ToneNotEqualComparisonGrammarAction($1, $3);}
-	| tone LOWER tone								{$$ = ToneLowerComparisonGrammarAction($1, $3);}
-	| tone GREATER tone								{$$ = ToneGreaterComparisonGrammarAction($1, $3);}
-	| tone LOWER_EQUAL tone							{$$ = ToneLowerEqualComparisonGrammarAction($1, $3);}
-	| tone GREATER_EQUAL tone						{$$ = ToneGreaterEqualComparisonGrammarAction($1, $3);}
-	| calculation EQUAL_EQUAL calculation			{$$ = CalculationEqualComparisonGrammarAction($1, $3);}
-	| calculation NOTEQUAL calculation				{$$ = CalculationNotEqualComparisonGrammarAction($1, $3);}
-	| calculation LOWER calculation					{$$ = CalculationLowerComparisonGrammarAction($1, $3);}
-	| calculation GREATER calculation				{$$ = CalculationGreaterComparisonGrammarAction($1, $3);}
-	| calculation LOWER_EQUAL calculation			{$$ = CalculationLowerEqualComparisonGrammarAction($1, $3);}
-	| calculation GREATER_EQUAL calculation			{$$ = CalculationGreaterEqualComparisonGrammarAction($1, $3);}
-	;
-
-// Backend chequea que las variables existan y sean la primera de tipo melody y la segunda de tipo note.
 addNote: variableName ADD variableName
 	;
 
-// Esto tira un conflicto de reduce/reduce porque no tanto expression como calculation pueden ser un variableName, no se como solucionarlo.
-assigment: BOOLEAN_DEF variableName EQUAL expression
-	| INTEGER_DEF variableName EQUAL calculation
+assigment: typeDefinition EQUAL expression
 	| variableName EQUAL expression
-	| variableName EQUAL calculation
 	;
 
 musicAssigment: musicTypeDefinition TONE_DEF TONE			{$$ = MusicTypeToneDefinitionGrammarAction($1);}
 	| musicTypeDefinition RYTHM_DEF RYTHM					{$$ = MusicTypeRythmDefinitionGrammarAction($1);}
-	| musicTypeDefinition BPM calculation					{$$ = MusicTypeDefinitionGrammarAction($1);}
+	| musicTypeDefinition BPM expression					{$$ = MusicTypeDefinitionGrammarAction($1);}
 	| variableName TONE_DEF TONE							{$$ = VariableToneTypeDefinitionGrammarAction($1);}
 	| variableName RYTHM_DEF RYTHM							{$$ = VariableRythmTypeDefinitionGrammarAction($1);}
-	| variableName BPM calculation							{$$ = VariableBpmTypeDefinitionGrammarAction($1);}
+	| variableName BPM expression							{$$ = VariableBpmTypeDefinitionGrammarAction($1);}
 	| musicAssigment TONE_DEF TONE							{$$ = MusicAssigmentToneDefinitionGrammarAction($1);}
 	| musicAssigment RYTHM_DEF RYTHM						{$$ = MusicAssigmentRythmDefinitionGrammarAction($1);}
-	| musicAssigment BPM calculation						{$$ = MusicAssigmentBpmDefinitionGrammarAction($1);}
+	| musicAssigment BPM expression							{$$ = MusicAssigmentBpmDefinitionGrammarAction($1);}
 	| variableName RAISE_OCTAVE								{$$ = VariableRaiseOctaveTypeDefinitionGrammarAction($1);}
 	| variableName LOWER_TONE								{$$ = VariableLowerToneDefinitionGrammarAction($1);}
-	| variableName REMOVE integer							{$$ = VariableRemoveIntegerDefinitionGrammarAction($1);}
-	| variableName ADD variableName integer					{$$ = VariableAdditionTypeDefinitionGrammarAction($1);}
+	| variableName REMOVE expression						{$$ = VariableRemoveIntegerDefinitionGrammarAction($1);}
+	| variableName ADD variableName expression				{$$ = VariableAdditionTypeDefinitionGrammarAction($1);}
 	;
 
 typeDefinition: BOOLEAN_DEF variableName
@@ -159,25 +149,15 @@ musicTypeDefinition: MELODY variableName
 	| NOTE variableName
 	;
 
-rythm: RYTHM
-	| variableName DOT RYTHM_DEF
+constant: RYTHM
+	| TONE
+	| INTEGER
+	| BOOLEAN
 	;
 
-tone: TONE
+getter: variableName DOT RYTHM_DEF
 	| variableName DOT TONE_DEF
-	;
-
-calculation: calculation PLUS calculation
-	| calculation SUB calculation
-	| calculation MUL calculation
-	| calculation DIV calculation
-	| OPEN_PARENTHESIS calculation OPEN_PARENTHESIS
-	| integer
-	;
-
-integer: INTEGER
 	| variableName DOT BPM
-	| variableName
 	| variableName DURATION
 	;
 
