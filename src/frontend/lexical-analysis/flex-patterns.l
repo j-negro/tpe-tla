@@ -29,14 +29,17 @@ char            [a-zA-Z_]
 
 "."                                         { return DOT; }
 
-"+"											{ return ADD; }
+"+"											{ return PLUS; }
 "-"											{ return SUB; }
 "*"											{ return MUL; }
 "/"										    { return DIV; }
 
-"&"                                         { return AND; }
+"&&"                                         { return AND; }
+"||"                                          { return OR; }
 "!"                                         { return NOT; }
 "="                                         { return EQUAL; }
+"=="                                        { return EQUAL_EQUAL; }
+"!="                                        { return NOTEQUAL; }
 "<"                                         { return LOWER; }
 ">"                                         { return GREATER; }
 "<="                                        { return LOWER_EQUAL; }
@@ -49,18 +52,27 @@ char            [a-zA-Z_]
 "while"                                     { return WHILE; }
 "return"                                    { return RETURN;}    
 
-"TONE"                                      { return TONE; }
+"TONE"                                      { return TONE_DEF; }
 "BPM"                                       { return BPM; }
-"RYTHM"                                     { return RYTHM;}
+"RYTHM"                                     { return RYTHM_DEF;}
 
-"int"                                       { return INTEGER; }
-"boolean"                                   { return BOOLEAN; }
+"int"                                       { return INTEGER_DEF; }
+"boolean"                                   { return BOOLEAN_DEF; }
 "melody"                                    { return MELODY; }
 "note"                                      { return NOTE; }
+"add"                                       { return ADD; }
+"raiseOctave"                               { return RAISE_OCTAVE; }
+"lowerTone"                                 { return LOWER_TONE; }
+"remove"                                    { return REMOVE; }
+"duration"                                  { return DURATION; }
 
-[A-G][2-6]                                  { return NotePatternAction(yytext); }
+false|true                                  { return BOOLEAN; }
 
-{char}+                                     { return VariablePatternAction(yytext) }
+[A-G][#b]?[2-6]                                  { return TonePatternAction(yytext); }
+
+whole|half|quarter|eight|sixteenth|thirtySecond|sixtyFourth   { return RythmPatternAction(yytext); }
+
+{char}+                                     { return VariablePatternAction(yytext); }
 
 {digit}+									{ return IntegerPatternAction(yytext); }
 

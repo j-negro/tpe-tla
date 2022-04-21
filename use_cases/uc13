@@ -1,0 +1,5 @@
+melody melodia BPM 100;
+
+melodia BPM C4;
+
+return melodia;

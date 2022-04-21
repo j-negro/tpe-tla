@@ -1,0 +1,9 @@
+int i = 0;
+melody melodia BPM 60;
+
+while (i < 10) {
+    note nota TONE A#5 RYTHM whole;
+    melodia add nota;
+}
+
+return melodia;

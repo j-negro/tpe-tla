@@ -13,14 +13,20 @@ TokenID IntegerPatternAction(const char * lexeme) {
 }
 
 
-TokenID NotePatternAction(const char * lexeme) {
-	LogDebug("NotePatternAction: '%s'.", lexeme);
+TokenID TonePatternAction(const char * lexeme) {
+	LogDebug("TonePatternAction: '%s'.", lexeme);
 	// yylval = atoi(lexeme);
-	return NOTE;
+	return TONE;
+}
+
+TokenID RythmPatternAction(const char * lexeme) {
+	LogDebug("RythmPatternAction: '%s'.", lexeme);
+	// yylval = atoi(lexeme);
+	return RYTHM;
 }
 
 void IgnoredPatternAction(const char * lexeme) {
-	LogDebug("IgnoredPatternAction: '%s'.", lexeme);
+	// LogDebug("IgnoredPatternAction: '%s'.", lexeme);
 }
 
 TokenID UnknownPatternAction(const char * lexeme) {

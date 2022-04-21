@@ -1,0 +1,39 @@
+int i = 0;
+melody melodia_A BPM 60;
+
+while (i < 5) {
+    note nota TONE A#5 RYTHM whole;
+    melodia_A add nota;
+}
+
+i = 0;
+melody melodia_B BPM 60;
+
+while (i < 10) {
+    note nota TONE C#5 RYTHM whole;
+    melodia_B add nota;
+}
+
+i = 0;
+melody melodia_C BPM 60;
+
+while (i < 12) {
+    note nota TONE F5 RYTHM whole;
+    melodia_C add nota;
+}
+
+melody melodia BPM 60;
+if (melodia_A duration > 8) {
+    melodia add melodia_A;
+}
+if (melodia_B duration > 8) {
+    melodia add melodia_B;
+}
+if (melodia_C duration > 8) {
+    melodia add melodia_C;
+}
+
+return melodia;
+
+
+

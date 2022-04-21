@@ -19,7 +19,7 @@ typedef enum TokenID {
 	YYUNDEF = 257,
 
 	// Operadores aritméticos.
-	ADD,
+	PLUS,
 	SUB,
 	MUL,
 	DIV,
@@ -29,6 +29,8 @@ typedef enum TokenID {
 	OR,
 	NOT,
 	EQUAL,
+	EQUAL_EQUAL,
+	NOTEQUAL,
 	LOWER,
 	GREATER,
 	LOWER_EQUAL,
@@ -52,13 +54,22 @@ typedef enum TokenID {
 
 	// Palabras reservadas
 	TONE,
+	TONE_DEF,
 	RYTHM,
+	RYTHM_DEF,
 	BPM,
+	ADD,
+	RAISE_OCTAVE,
+	LOWER_TONE,
+	REMOVE,
+	DURATION,
 
 	// Tipos de dato.
+	INTEGER_DEF,
 	INTEGER,
 	MELODY,
 	NOTE,
+	BOOLEAN_DEF,
 	BOOLEAN,
 	VARIABLE
 
@@ -77,7 +88,9 @@ void IgnoredPatternAction(const char * lexeme);
 
 TokenID UnknownPatternAction(const char * lexeme);
 
-TokenID NotePatternAction(const char * lexeme);
+TokenID TonePatternAction(const char * lexeme);
+
+TokenID RythmPatternAction(const char * lexeme);
 
 TokenID VariablePatternAction(const char * lexeme);
 

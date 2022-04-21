@@ -6,7 +6,7 @@
 
 // IDs de los tokens generados desde Flex:
 // Operadores aritméticos.
-%token ADD
+%token PLUS
 %token SUB
 %token MUL
 %token DIV
@@ -16,6 +16,8 @@
 %token OR
 %token NOT
 %token EQUAL
+%token EQUAL_EQUAL
+%token NOTEQUAL
 %token LOWER
 %token GREATER
 %token LOWER_EQUAL
@@ -40,61 +42,126 @@
 
 // Palabras reservadas
 %token TONE
+%token TONE_DEF
 %token RYTHM
+%token RYTHM_DEF
 %token BPM
+%token ADD
+%token RAISE_OCTAVE
+%token LOWER_TONE
+%token REMOVE
+%token DURATION
 
 // Tipos de dato.
-%token INTEGER,
-%token MELODY,
-%token NOTE,
-%token BOOLEAN,
-%token CONST
+%token INTEGER_DEF
+%token INTEGER
+%token MELODY
+%token NOTE
+%token BOOLEAN_DEF
+%token BOOLEAN
+%token VARIABLE
 
 // Reglas de asociatividad y precedencia (de menor a mayor):
-%left ADD SUB
+%left AND OR
+%left NOT
+%left LOWER LOWER_EQUAL GREATER GREATER_EQUAL EQUAL EQUAL_EQUAL NOTEQUAL
+%left PLUS SUB
 %left MUL DIV
 
 %%
 
-program: block RETURN MELODY SEMICOLON											{ $$ = ProgramGrammarAction($1); }
+program: code returnLine									{ ProgramGrammarAction($1); }
 	;
 
-block: OPEN_BRACKETS block CLOSE_BRACKETS
-	| OPEN_BRACKETS expression CLOSE_BRACKETS
-	| 
-	;
-	
-sentence: NOTE variable EQUAL expression SEMICOLON
+returnLine: RETURN variableName SEMICOLON
+	| RETURN musicTypeDefinition SEMICOLON
 	;
 
-declaration: NOTE VARIABLE EQUAL 
-	;
- 
-
-expression: expression ADD expression							{ $$ = AdditionExpressionGrammarAction($1, $3); }
-	| expression SUB expression									{ $$ = SubtractionExpressionGrammarAction($1, $3); }
-	| expression MUL expression									{ $$ = MultiplicationExpressionGrammarAction($1, $3); }
-	| expression DIV expression									{ $$ = DivisionExpressionGrammarAction($1, $3); }
-	| 
-	| factor													{ $$ = FactorExpressionGrammarAction($1); }
+code: %empty
+	| line code
 	;
 
-
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS			{ $$ = ExpressionFactorGrammarAction($2); }
-	| constant													{ $$ = ConstantFactorGrammarAction($1); }
-	| variable													{ $$ = VariableFactorGrammarAction($1); }
+line: typeDefinition SEMICOLON
+	| assigment SEMICOLON
+	| musicTypeDefinition SEMICOLON
+	| musicAssigment SEMICOLON
+	| addNote SEMICOLON
+	| ifStatement
+	| whileStatement
 	;
 
-constant: INTEGER 												{ $$ = IntegerConstantGrammarAction($1); }
+ifStatement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block	 {$$ = ifStatementGrammarAction($3,$5);}
+	| ifStatement ELSE block                      
+	;
+
+whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block  {$$ = WhileStatementGrammarAction($3,$5);}
+	;
+
+block: OPEN_BRACKETS code CLOSE_BRACKETS
+	;
+
+expression: expression AND expression						{$$ = BooleanAndExpressionGrammarAction($1, $3);}
+	| expression OR expression						{$$ = BooleanOrExpressionGrammarAction($1, $3);}
+	| NOT expression								{$$ = BooleanNotExpressionGrammarAction($2);}
+	| expression PLUS expression
+	| expression SUB expression
+	| expression MUL expression
+	| expression DIV expression
+	| expression EQUAL_EQUAL expression			{$$ = CalculationEqualComparisonGrammarAction($1, $3);}
+	| expression NOTEQUAL expression				{$$ = CalculationNotEqualComparisonGrammarAction($1, $3);}
+	| expression LOWER expression					{$$ = CalculationLowerComparisonGrammarAction($1, $3);}
+	| expression GREATER expression				{$$ = CalculationGreaterComparisonGrammarAction($1, $3);}
+	| expression LOWER_EQUAL expression			{$$ = CalculationLowerEqualComparisonGrammarAction($1, $3);}
+	| expression GREATER_EQUAL expression			{$$ = CalculationGreaterEqualComparisonGrammarAction($1, $3);}
+	| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
+	| variableName
+	| constant
+	| getter
+	;
+
+addNote: variableName ADD variableName
+	;
+
+assigment: typeDefinition EQUAL expression
+	| variableName EQUAL expression
+	;
+
+musicAssigment: musicTypeDefinition TONE_DEF TONE			{$$ = MusicTypeToneDefinitionGrammarAction($1);}
+	| musicTypeDefinition RYTHM_DEF RYTHM					{$$ = MusicTypeRythmDefinitionGrammarAction($1);}
+	| musicTypeDefinition BPM expression					{$$ = MusicTypeDefinitionGrammarAction($1);}
+	| variableName TONE_DEF TONE							{$$ = VariableToneTypeDefinitionGrammarAction($1);}
+	| variableName RYTHM_DEF RYTHM							{$$ = VariableRythmTypeDefinitionGrammarAction($1);}
+	| variableName BPM expression							{$$ = VariableBpmTypeDefinitionGrammarAction($1);}
+	| musicAssigment TONE_DEF TONE							{$$ = MusicAssigmentToneDefinitionGrammarAction($1);}
+	| musicAssigment RYTHM_DEF RYTHM						{$$ = MusicAssigmentRythmDefinitionGrammarAction($1);}
+	| musicAssigment BPM expression							{$$ = MusicAssigmentBpmDefinitionGrammarAction($1);}
+	| variableName RAISE_OCTAVE								{$$ = VariableRaiseOctaveTypeDefinitionGrammarAction($1);}
+	| variableName LOWER_TONE								{$$ = VariableLowerToneDefinitionGrammarAction($1);}
+	| variableName REMOVE expression						{$$ = VariableRemoveIntegerDefinitionGrammarAction($1);}
+	| variableName ADD variableName expression				{$$ = VariableAdditionTypeDefinitionGrammarAction($1);}
+	;
+
+typeDefinition: BOOLEAN_DEF variableName
+	| INTEGER_DEF variableName
+	;
+
+musicTypeDefinition: MELODY variableName
+	| NOTE variableName
+	;
+
+constant: RYTHM
+	| TONE
+	| INTEGER
 	| BOOLEAN
-	| MELODY
-	| NOTE
-
 	;
 
-variable: NOTE 													{ $$ = NoteVariableGrammarAction($1); }
-	| MELODY
+getter: variableName DOT RYTHM_DEF
+	| variableName DOT TONE_DEF
+	| variableName DOT BPM
+	| variableName DURATION
 	;
 
+variableName: VARIABLE
+	;
 
 %%
