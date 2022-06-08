@@ -4,6 +4,7 @@ melody melodia_A BPM 60;
 while (i < 5) {
     note nota TONE A#5 RYTHM whole;
     melodia_A add nota;
+    
 }
 
 i = 0;
