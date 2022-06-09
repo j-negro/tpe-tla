@@ -101,10 +101,11 @@
 
 // Reglas de asociatividad y precedencia (de menor a mayor):
 %left AND OR
-%left NOT
 %left LOWER LOWER_EQUAL GREATER GREATER_EQUAL EQUAL EQUAL_EQUAL NOTEQUAL
 %left PLUS SUB
 %left MUL DIV
+
+%right NOT
 
 %%
 
