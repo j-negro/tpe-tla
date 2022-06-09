@@ -9,6 +9,7 @@ while (i < 4) {
     melodia_B add nota_B;
 
     melodia_A = melodia_A + melodia_B;
+    i = i+1;
 }
 
 return melodia_A;

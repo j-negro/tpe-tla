@@ -10,7 +10,8 @@ int i = 0;
 while (i < 4) {
     if (i < 2) {
         melodia remove i;
-    }    
+    }
+    i = i+1;    
 }
 
 return melodia;

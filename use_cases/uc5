@@ -4,6 +4,7 @@ melody melodia BPM 180;
 while (i < 4) {
     note nota TONE A#5 RYTHM half;
     melodia add nota;
+    i = i+1;
 }
 
 melodia lowerTone;
