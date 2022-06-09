@@ -33,6 +33,106 @@ typedef enum {
 	true = 1
 } boolean;
 
+typedef struct {
+	char *name;
+	void *value;
+	int type;
+} t_variable;
+
+typedef struct {
+	void *value;
+	int type;
+} t_constant;
+
+typedef struct {
+	t_variable * variable;
+	int type;
+} t_getter;
+
+typedef struct {
+	t_variable *variable;
+	int type;
+} t_musicTypeDefinition;
+
+typedef struct {
+	t_variable *variable;
+	int type;
+} t_typeDefinition;
+
+typedef struct {
+	t_musicTypeDefinition * musicTypeDefinition;
+	t_typeDefinition * typeDefinition;
+	t_variable * variable;
+
+	int defType;
+	void *value;
+
+	struct t_musicAssignment * musicAssignment;
+} t_musicAssignment;
+
+typedef struct {
+	t_typeDefinition * typeDefinition;
+	t_variable * variable;
+	void *value;
+	int type;
+
+} t_assignment;
+
+typedef struct {
+	t_variable * variable1;
+	t_variable * variable2;
+} t_addNote;
+
+typedef struct {
+	t_variable * variable;
+	t_constant * constant;
+	t_getter * getter;
+
+	int type;
+	struct t_expression * expression1;
+	struct t_expression * expression2;
+} t_expression;
+
+typedef struct {
+	t_code * code;
+} t_block;
+
+typedef struct {
+	t_line * line;
+	struct t_code * code;
+} t_code;
+
+typedef struct {
+	t_typeDefinition * typeDefinition;
+	t_musicTypeDefinition * musicTypeDefinition;
+	t_assignment * assignment;
+	t_musicAssignment * musicAssignment;
+	t_addNote * addNote;
+	t_ifStatement * ifStatement;
+	t_whileStatement * whileStatement;
+} t_line;
+
+typedef struct {
+	t_expression * expression;
+	t_block * block;
+	struct t_ifStatement * ifStatement;
+} t_ifStatement;
+
+typedef struct {
+	t_expression * expression;
+	t_block * block;
+} t_while;
+
+typedef struct {
+	t_variable * variable;
+	t_musicTypeDefinition * musicTypeDefinition;
+} t_returnLine;
+
+typedef struct {
+	t_code * code;
+	t_returnLine * returnLine;
+} t_program;
+
 // Estado global de toda la aplicación.
 typedef struct {
 

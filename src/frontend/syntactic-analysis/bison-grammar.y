@@ -2,6 +2,30 @@
 
 #include "bison-actions.h"
 
+%union{
+	t_variable * variable;
+	t_constant * constant;
+	t_getter * getter;
+	t_musicTypeDefinition * musicTypeDefinition;
+	t_typeDefinition * typeDefinition;
+	t_musicAssignment *musicAssignment;
+	t_assignment * assignment;
+	t_addNote * addNote;
+	t_expression * expression;
+	t_block * block;
+	t_code * code;
+	t_line * line;
+	t_ifStatement * ifStatement;
+	t_while * while;
+	t_returnLine * returnLine;
+	t_program * program;
+	char * string;
+	int integer;
+	double floatNumber;
+	boolean boolean;
+	int token;
+}
+
 %}
 
 // IDs de los tokens generados desde Flex:
