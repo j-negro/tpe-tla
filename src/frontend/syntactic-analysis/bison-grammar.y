@@ -16,7 +16,7 @@
 	t_code * code;
 	t_line * line;
 	t_ifStatement * ifStatement;
-	t_while * while;
+	t_while * whileStatement;
 	t_returnLine * returnLine;
 	t_program * program;
 	char * string;
@@ -24,45 +24,59 @@
 	double floatNumber;
 	boolean boolean;
 	int token;
-}
+}%
 
-%}
+%type <variable> variableName
+%type <constant> constant
+%type <getter> getter
+%type <musicTypeDefinition> musicTypeDefinition
+%type <typeDefinition> typeDefinition
+%type <assignment> assignment
+%type <addNote> addNote
+%type <expression> expression
+%type <code> code
+%type <line> line
+%type <ifStatement> ifStatement
+%type <whileStatement> whileStatement
+%type <returnLine> returnLine
+%type <program> program
+
 
 // IDs de los tokens generados desde Flex:
 // Operadores aritméticos.
-%token PLUS
-%token SUB
-%token MUL
-%token DIV
+%token <token> PLUS
+%token <token> SUB
+%token <token> MUL
+%token <token> DIV
 
 // Operadores lógicos
-%token AND
-%token OR
-%token NOT
-%token EQUAL
-%token EQUAL_EQUAL
-%token NOTEQUAL
-%token LOWER
-%token GREATER
-%token LOWER_EQUAL
-%token GREATER_EQUAL
+%token <token> AND
+%token <token> OR
+%token <token> NOT
+%token <token> EQUAL
+%token <token> EQUAL_EQUAL
+%token <token> NOTEQUAL
+%token <token> LOWER
+%token <token> GREATER
+%token <token> LOWER_EQUAL
+%token <token> GREATER_EQUAL
 
 // Control de flujo
-%token IF
-%token ELSE
-%token WHILE
-%token RETURN
+%token <token> IF
+%token <token> ELSE
+%token <token> WHILE
+%token <token> RETURN
 	
 // Punctuación
-%token SEMICOLON
-%token DOT
+%token <token> SEMICOLON
+%token <token> DOT
 
 // Paréntesis
-%token OPEN_PARENTHESIS
-%token CLOSE_PARENTHESIS
+%token <token> OPEN_PARENTHESIS
+%token <token> CLOSE_PARENTHESIS
 
-%token OPEN_BRACKETS
-%token CLOSE_BRACKETS
+%token <token> OPEN_BRACKETS
+%token <token> CLOSE_BRACKETS
 
 // Palabras reservadas
 %token TONE

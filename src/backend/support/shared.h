@@ -121,7 +121,7 @@ typedef struct {
 typedef struct {
 	t_expression * expression;
 	t_block * block;
-} t_while;
+} t_whileStatement;
 
 typedef struct {
 	t_variable * variable;
