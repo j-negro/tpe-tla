@@ -6,20 +6,20 @@
  * Implementación de "flex-rules.h".
  */
 
-TokenID IntegerPatternAction(const char * lexeme) {
+token IntegerPatternAction(const char * lexeme) {
 	LogDebug("IntegerPatternAction: '%s'.", lexeme);
-	yylval = atoi(lexeme);
+    yylval.integer = atoi(lexeme);
 	return INTEGER;
 }
 
 
-TokenID TonePatternAction(const char * lexeme) {
+token TonePatternAction(const char * lexeme) {
 	LogDebug("TonePatternAction: '%s'.", lexeme);
 	// yylval = atoi(lexeme);
 	return TONE;
 }
 
-TokenID RythmPatternAction(const char * lexeme) {
+token RythmPatternAction(const char * lexeme) {
 	LogDebug("RythmPatternAction: '%s'.", lexeme);
 	// yylval = atoi(lexeme);
 	return RYTHM;
@@ -29,12 +29,12 @@ void IgnoredPatternAction(const char * lexeme) {
 	// LogDebug("IgnoredPatternAction: '%s'.", lexeme);
 }
 
-TokenID UnknownPatternAction(const char * lexeme) {
+token UnknownPatternAction(const char * lexeme) {
 	LogDebug("UnknownPatternAction: '%s'.", lexeme);
 	return YYUNDEF;
 }
 
-TokenID VariablePatternAction(const char * lexeme) {
+token VariablePatternAction(const char * lexeme) {
 	LogDebug("VariablePatternAction: '%s'.", lexeme);
 	return VARIABLE;
 }

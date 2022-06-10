@@ -77,8 +77,6 @@ whole|half|quarter|eight|sixteenth|thirtySecond|sixtyFourth   { return RythmPatt
 
 {digit}+									{ return IntegerPatternAction(yytext); }
 
-[/][/].*[\n]                                       { return COMMENT; }
-
 {whitespace}								{ IgnoredPatternAction(yytext); }
 
 .											{ return UnknownPatternAction(yytext); }

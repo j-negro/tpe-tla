@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 
+typedef struct Expression Expression;
+typedef struct Block Block;
+
 // Descriptor del archivo de entrada que utiliza Bison.
 extern FILE * yyin;
 
 // Descriptor del archivo de salida que utiliza Bison.
 extern FILE * yyout;
-
-// Variable global que contiene el número escaneado.
-extern int yylval;
 
 // Variable global que contiene el número de la línea analizada.
 extern int yylineno;
@@ -33,106 +33,236 @@ typedef enum {
 	true = 1
 } boolean;
 
+typedef int token;
+
+typedef enum {
+	NORMAL,
+	FLAT,
+	SHARP
+} NoteType;
+
+typedef enum {
+	C,
+	D,
+	E,
+	F,
+	G,
+	A,
+	B
+} NoteName;
+
+// Emular tipo TONE.
+typedef struct {
+	int octave;
+	NoteName name;
+	NoteType type;
+} tone;
+
+// Emular tipo RYTHM.
+typedef enum rythm {
+	WHOLE,
+	HALF,
+	QUARTER,
+	EIGHTH,
+	SIXTEENTH,
+	THIRTYSECOND,
+	SIXTYFOURTH
+} rythm;
+
+// Definiciones de nodos del arbol.
+
 typedef struct {
 	char *name;
-	void *value;
-	int type;
-} t_variable;
+} VariableName;
+
+typedef enum {
+	INTEGER_CONSTANT,
+	RYTHM_CONSTANT,
+	BOOLEAN_CONSTANT,
+	TONE_CONSTANT
+} ConstantType;
+
+typedef union {
+	int integer;
+	rythm rythm;
+	boolean boolean;
+	tone tone;
+} ConstantValue;
+
 
 typedef struct {
-	void *value;
-	int type;
-} t_constant;
+	ConstantType type;
+	ConstantValue value;
+} Constant;
+
+typedef enum {
+	RYTHM_GETTER,
+	TONE_GETTER,
+	BPM_GETTER,
+	DURATION_GETTER,
+} GetterType;
 
 typedef struct {
-	t_variable * variable;
-	int type;
-} t_getter;
+	GetterType type;
+	VariableName *name;
+} Getter;
+
+typedef enum {
+	MELODY_DEFINITION,
+	NOTE_DEFINITION
+} MusicTypeDefinitionType;
 
 typedef struct {
-	t_variable *variable;
-	int type;
-} t_musicTypeDefinition;
+	MusicTypeDefinitionType type;
+	VariableName *name;
+} MusicTypeDefinition;
+
+typedef enum {
+	BOOLEAN_DEFINITION,
+	INTEGER_DEFINITION
+} TypeDefinitionType;
 
 typedef struct {
-	t_variable *variable;
-	int type;
-} t_typeDefinition;
+	TypeDefinitionType type;
+	VariableName * name;
+} TypeDefinition;
+
+typedef enum {
+	TYPE_DEFINITION_ASSIGNMENT,
+	VARIABLE_NAME_ASSIGNMENT,
+} AssignmentType;
 
 typedef struct {
-	t_musicTypeDefinition * musicTypeDefinition;
-	t_typeDefinition * typeDefinition;
-	t_variable * variable;
+	AssignmentType type;
 
-	int defType;
-	void *value;
+	// puntero que depende del type (typeDefinition o variableName)
+	void * variable;
 
-	struct t_musicAssignment * musicAssignment;
-} t_musicAssignment;
+	Expression * expression;
+} Assigment;
+
+typedef enum {
+	TYPE_DEFINITION_MUSIC_ASSIGNMENT,
+	VARIABLE_NAME_MUSIC_ASSIGNMENT,
+	ASSIGNMENT_MUSIC_ASSIGNMENT,
+} MusicAssignmentVariableType;
+
+typedef enum {
+	TONE_ASSIGNMENT,
+	RYTHM_ASSIGNMENT,
+	BPM_ASSIGNMENT,
+	RAISE_OCTAVE_ASSIGNMENT,
+	LOWER_TONE_ASSIGNMENT,
+	REMOVE_ASSIGNMENT,
+	ADD_ASSIGNMENT, 
+} MusicAssignmentType;
+
+typedef union {
+	tone tone;
+	rythm rythm;
+	Expression * bpm;
+} MusicAssignmentValue;
 
 typedef struct {
-	t_typeDefinition * typeDefinition;
-	t_variable * variable;
-	void *value;
-	int type;
+	MusicAssignmentVariableType type;
+	// puntero que depende del type (musicTypeDefinition, variableName, musicAssignment)
+	void * variable;
 
-} t_assignment;
+	MusicAssignmentType musicAssignmentType;
 
-typedef struct {
-	t_variable * variable1;
-	t_variable * variable2;
-} t_addNote;
+	// depende del valor que queres guardar dependiendo del type (tone, rythm, bpm)
+	MusicAssignmentValue value;
+} MusicAssignment;
 
 typedef struct {
-	t_variable * variable;
-	t_constant * constant;
-	t_getter * getter;
+	VariableName *melody;
+	VariableName *note;
+} AddNote;
 
-	int type;
-	struct t_expression * expression1;
-	struct t_expression * expression2;
-} t_expression;
+typedef enum {
+	AND_EXPRESSION,
+	OR_EXPRESSION,
+	NOT_EXPRESSION,
+	PLUS_EXPRESSION,
+	SUB_EXPRESSION,
+	MUL_EXPRESSION,
+	DIV_EXPRESSION,
+	EQUAL_EQUAL_EXPRESSION,
+	NOTEQUAL_EXPRESSION,
+	LOWER_EXPRESSION,
+	LOWER_EQUAL_EXPRESSION,
+	GREATER_EXPRESSION,
+	GREATER_EQUAL_EXPRESSION,
+	PARENTHESIS_EXPRESSION,
+	VARIABLE_EXPRESSION,
+	CONSTANT_EXPRESSION,
+	GETTER_EXPRESSION,
+} ExpressionType;
 
-typedef struct t_ifStatement{
-	t_expression * expression;
-	t_block * block;
-	struct t_ifStatement * ifStatement;
-} t_ifStatement;
+struct Expression {
+	ExpressionType type;
+	struct Expression *expression1;
+	struct Expression *expression2;
+	// puede ser variableName constant o getter dependiendo del type
+	void * value;
+};
 
-typedef struct t_whileStatement{
-	t_expression * expression;
-	t_block * block;
-} t_whileStatement;
+typedef enum {
+	IF_TYPE,
+	IF_ELSE_TYPE
+} IfType;
 
-typedef struct t_sentence {
-	t_typeDefinition * typeDefinition;
-	t_musicTypeDefinition * musicTypeDefinition;
-	t_assignment * assignment;
-	t_musicAssignment * musicAssignment;
-	t_addNote * addNote;
-	t_ifStatement * ifStatement;
-	t_whileStatement * whileStatement;
-} t_sentence;
+typedef struct {
+	IfType type;
 
-typedef struct t_code {
-	t_sentence * sentence;
-	t_code * code;
-} t_code;
+	// puede ser una expresion o un ifStatement dependiendo del type
+	void * expression;
+	
+	Block * block;
+} IfStatement;
 
-typedef struct t_block {
-	t_code * code;
-} t_block;
+typedef struct {
+	Expression * expression;
+	Block * block;
+} WhileStatement;
 
+typedef enum {
+	VARIABLE_NAME_RETURN,
+	MUSIC_TYPE_DEFINITION_RETURN
+} ReturnLineType;
 
-typedef struct t_returnLine{
-	t_variable * variable;
-	t_musicTypeDefinition * musicTypeDefinition;
-} t_returnLine;
+typedef struct {
+	ReturnLineType type;
+	// puede ser variableName o musicTypeDefinition segun el type
+	void * value;
+} ReturnLine;
 
-typedef struct t_program{
-	t_sentence * sentence;
-	t_program * program;
-} t_program;
+typedef enum {
+	TYPE_DEFINITION_SENTENCE,
+	ASSIGNMENT_SENTENCE,
+	MUSIC_TYPE_DEFINITION_SENTENCE,
+	MUSIC_ASSIGNMENT_SENTENCE,
+	ADD_NOTE_SENTENCE,
+	IF_STATEMENT_SENTENCE,
+	WHILE_STATEMENT_SENTENCEM,
+	RETURN_LINE_SENTENCE
+} SentenceType;
+
+typedef struct {
+	SentenceType type;
+
+	// puede ser typeDefinition, musicTypeDefinition, assignment, musicAssignment, addNote, ifStatement, whileStatement, returnLine
+	void * sentence;
+} Sentence;
+
+struct Block {
+	Sentence * sentence;
+	struct Block * block;
+};
+
+typedef struct {
+	Block * block;
+} Program;
 
 // Estado global de toda la aplicación.
 typedef struct {
@@ -144,7 +274,9 @@ typedef struct {
 	int result;
 
 	// Agregar una pila para almacenar tokens/nodos.
-	// Agregar un nodo hacia la raíz del árbol de sintaxis abstracta.
+	// Nodo hacia la raíz del árbol de sintaxis abstracta.
+	Program * program;
+
 	// Agregar una tabla de símbolos.
 	// ...
 

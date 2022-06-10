@@ -2,79 +2,85 @@
 #define FLEX_ACTIONS_HEADER
 
 #include "../../backend/support/shared.h"
+#include "../syntactic-analysis/bison-parser.h"
 
 /**
  * Se definen los diferentes IDs de cada token disponible para el scanner Flex.
  */
-typedef enum TokenID {
 
-	// Por defecto, el valor "0" hace fallar el analizador sintáctico.
-	UNKNOWN = 0,
+#define UNKNOWN 0
+#define YYUNDEF 257
 
-	// Código de error de Bison, que permite abortar el escaneo de lexemas cuando
-	// se presente un patrón desconocido. El número "257" coincide con el valor
-	// que Bison le otorga por defecto, pero además permite que el resto de
-	// tokens continúen desde el valor "258" lo que permite proteger los IDs
-	// internos que Bison reserva para crear "tokens literales":
-	YYUNDEF = 257,
+// TODO: esto ahora se saca porque lo define bison parece
 
-	// Operadores aritméticos.
-	PLUS,
-	SUB,
-	MUL,
-	DIV,
-
-	// Operadores lógicos
-	AND,
-	OR,
-	NOT,
-	EQUAL,
-	EQUAL_EQUAL,
-	NOTEQUAL,
-	LOWER,
-	GREATER,
-	LOWER_EQUAL,
-	GREATER_EQUAL,
-
-	// Control de flujo
-	IF,
-	ELSE,
-	WHILE,
-	RETURN,
-	
-	// Punctuación
-	SEMICOLON,
-	DOT,
-
-	// Paréntesis.
-	OPEN_PARENTHESIS,
-	CLOSE_PARENTHESIS,
-	OPEN_BRACKETS,
-	CLOSE_BRACKETS,
-
-	// Palabras reservadas
-	TONE,
-	TONE_DEF,
-	RYTHM,
-	RYTHM_DEF,
-	BPM,
-	ADD,
-	RAISE_OCTAVE,
-	LOWER_TONE,
-	REMOVE,
-	DURATION,
-	COMMENT,
-
-	// Tipos de dato.
-	INTEGER_DEF,
-	INTEGER,
-	MELODY,
-	NOTE,
-	BOOLEAN_DEF,
-	BOOLEAN,
-	VARIABLE
-
-} TokenID;
+//typedef enum TokenID {
+//
+//	// Por defecto, el valor "0" hace fallar el analizador sintáctico.
+//	UNKNOWN = 0,
+//
+//	// Código de error de Bison, que permite abortar el escaneo de lexemas cuando
+//	// se presente un patrón desconocido. El número "257" coincide con el valor
+//	// que Bison le otorga por defecto, pero además permite que el resto de
+//	// tokens continúen desde el valor "258" lo que permite proteger los IDs
+//	// internos que Bison reserva para crear "tokens literales":
+//	YYUNDEF = 257,
+//
+//	// Operadores aritméticos.
+//	PLUS,
+//	SUB,
+//	MUL,
+//	DIV,
+//
+//	// Operadores lógicos
+//	AND,
+//	OR,
+//	NOT,
+//	EQUAL,
+//	EQUAL_EQUAL,
+//	NOTEQUAL,
+//	LOWER,
+//	GREATER,
+//	LOWER_EQUAL,
+//	GREATER_EQUAL,
+//
+//	// Control de flujo
+//	IF,
+//	ELSE,
+//	WHILE,
+//	RETURN,
+//
+//	// Punctuación
+//	SEMICOLON,
+//	DOT,
+//
+//	// Paréntesis.
+//	OPEN_PARENTHESIS,
+//	CLOSE_PARENTHESIS,
+//	OPEN_BRACKETS,
+//	CLOSE_BRACKETS,
+//
+//	// Palabras reservadas
+//	TONE,
+//	TONE_DEF,
+//	RYTHM,
+//	RYTHM_DEF,
+//	BPM,
+//	ADD,
+//	RAISE_OCTAVE,
+//	LOWER_TONE,
+//	REMOVE,
+//	DURATION,
+//
+//	// Tipos de dato.
+//	INTEGER_DEF,
+//	INTEGER,
+//	MELODY,
+//	NOTE,
+//	BOOLEAN_DEF,
+//	BOOLEAN,
+//	VARIABLE
+//
+//} TokenID;
 
 /**
  * Se definen las acciones a ejecutar sobre cada patrón hallado mediante el
@@ -83,16 +89,16 @@ typedef enum TokenID {
  * (a.k.a. DFA), como mecanismo de escaneo y reconocimiento.
  */
 
-TokenID IntegerPatternAction(const char * lexeme);
+token IntegerPatternAction(const char * lexeme);
 
 void IgnoredPatternAction(const char * lexeme);
 
-TokenID UnknownPatternAction(const char * lexeme);
+token UnknownPatternAction(const char * lexeme);
 
-TokenID TonePatternAction(const char * lexeme);
+token TonePatternAction(const char * lexeme);
 
-TokenID RythmPatternAction(const char * lexeme);
+token RythmPatternAction(const char * lexeme);
 
-TokenID VariablePatternAction(const char * lexeme);
+token VariablePatternAction(const char * lexeme);
 
 #endif

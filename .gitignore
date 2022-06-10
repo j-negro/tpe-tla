@@ -17,3 +17,4 @@ bison-parser.h
 flex-scanner.c
 
 .idea/
+.vscode/
