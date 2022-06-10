@@ -1,6 +1,6 @@
 melody melodia BPM 100;
 
-note DO TONE C4 RYTHM whole;
+note DO TONE C4 RYTHM whole; // HOLA
 note MI TONE E4 RYTHM half;
 
 melodia add DO;

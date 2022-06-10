@@ -93,16 +93,18 @@ typedef struct {
 	struct t_expression * expression2;
 } t_expression;
 
-typedef struct {
-	t_code * code;
-} t_block;
+typedef struct t_ifStatement{
+	t_expression * expression;
+	t_block * block;
+	struct t_ifStatement * ifStatement;
+} t_ifStatement;
 
-typedef struct {
-	t_line * line;
-	struct t_code * code;
-} t_code;
+typedef struct t_whileStatement{
+	t_expression * expression;
+	t_block * block;
+} t_whileStatement;
 
-typedef struct {
+typedef struct t_sentence {
 	t_typeDefinition * typeDefinition;
 	t_musicTypeDefinition * musicTypeDefinition;
 	t_assignment * assignment;
@@ -110,27 +112,26 @@ typedef struct {
 	t_addNote * addNote;
 	t_ifStatement * ifStatement;
 	t_whileStatement * whileStatement;
-} t_line;
+} t_sentence;
 
-typedef struct {
-	t_expression * expression;
-	t_block * block;
-	struct t_ifStatement * ifStatement;
-} t_ifStatement;
+typedef struct t_code {
+	t_sentence * sentence;
+	t_code * code;
+} t_code;
 
-typedef struct {
-	t_expression * expression;
-	t_block * block;
-} t_whileStatement;
+typedef struct t_block {
+	t_code * code;
+} t_block;
 
-typedef struct {
+
+typedef struct t_returnLine{
 	t_variable * variable;
 	t_musicTypeDefinition * musicTypeDefinition;
 } t_returnLine;
 
-typedef struct {
-	t_code * code;
-	t_returnLine * returnLine;
+typedef struct t_program{
+	t_sentence * sentence;
+	t_program * program;
 } t_program;
 
 // Estado global de toda la aplicación.

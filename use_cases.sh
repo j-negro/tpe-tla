@@ -3,7 +3,6 @@
 # and save errors in array
 
 errors=( )
-
 for file in ./use_cases/*
 do
   echo "Compiling $file"

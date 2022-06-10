@@ -63,6 +63,7 @@ typedef enum TokenID {
 	LOWER_TONE,
 	REMOVE,
 	DURATION,
+	COMMENT,
 
 	// Tipos de dato.
 	INTEGER_DEF,

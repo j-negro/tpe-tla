@@ -20,6 +20,7 @@ endline			\n
 whitespace		[ \f\n\r\t\v]
 char            [a-zA-Z_]
 
+
 %%
 
 "{"                                         { return OPEN_BRACKETS; }
@@ -75,6 +76,8 @@ whole|half|quarter|eight|sixteenth|thirtySecond|sixtyFourth   { return RythmPatt
 {char}+                                     { return VariablePatternAction(yytext); }
 
 {digit}+									{ return IntegerPatternAction(yytext); }
+
+[/][/].*[\n]                                       { return COMMENT; }
 
 {whitespace}								{ IgnoredPatternAction(yytext); }
 
