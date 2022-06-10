@@ -71,7 +71,11 @@ typedef enum TokenID {
 	NOTE,
 	BOOLEAN_DEF,
 	BOOLEAN,
-	VARIABLE
+	VARIABLE,
+
+    COMMENT,
+    STRING,
+    PRINT,
 
 } TokenID;
 

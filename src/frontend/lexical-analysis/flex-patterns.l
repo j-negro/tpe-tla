@@ -50,7 +50,8 @@ char            [a-zA-Z_]
 "if"                                        { return IF; }
 "else"                                      { return ELSE; }
 "while"                                     { return WHILE; }
-"return"                                    { return RETURN;}    
+"return"                                    { return RETURN;}
+"print"                                     { return PRINT; }
 
 "TONE"                                      { return TONE_DEF; }
 "BPM"                                       { return BPM; }
@@ -68,6 +69,8 @@ char            [a-zA-Z_]
 
 false|true                                  { return BOOLEAN; }
 
+##[ -~]*([\n]|[\r\n])                     { return COMMENT; }
+
 [A-G][#b]?[2-6]                                  { return TonePatternAction(yytext); }
 
 whole|half|quarter|eight|sixteenth|thirtySecond|sixtyFourth   { return RythmPatternAction(yytext); }
@@ -75,6 +78,8 @@ whole|half|quarter|eight|sixteenth|thirtySecond|sixtyFourth   { return RythmPatt
 {char}+                                     { return VariablePatternAction(yytext); }
 
 {digit}+									{ return IntegerPatternAction(yytext); }
+
+'[ a-zA-Z0-9\*\\]*'                          { return STRING; }
 
 {whitespace}								{ IgnoredPatternAction(yytext); }
 

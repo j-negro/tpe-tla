@@ -98,6 +98,9 @@
 %token BOOLEAN_DEF
 %token BOOLEAN
 %token VARIABLE
+%token COMMENT
+%token STRING
+%token PRINT
 
 // Reglas de asociatividad y precedencia (de menor a mayor):
 %left AND OR
@@ -127,6 +130,8 @@ line: typeDefinition SEMICOLON
 	| addNote SEMICOLON
 	| ifStatement
 	| whileStatement
+	| COMMENT
+	| PRINT STRING SEMICOLON
 	;
 
 ifStatement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block	 {$$ = ifStatementGrammarAction($3,$5);}
