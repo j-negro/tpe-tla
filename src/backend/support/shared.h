@@ -6,6 +6,38 @@
 typedef struct Expression Expression;
 typedef struct Block Block;
 
+// Emular tipo "boolean".
+typedef enum {
+    false = 0,
+    true = 1
+} boolean;
+
+
+#define MAX_TABLE 1024
+
+typedef enum VariableType {
+    VAR_INT,
+    VAR_BOOL,
+    VAR_MELODY,
+    VAR_NOTE,
+} VariableType;
+
+typedef struct Symbol {
+    char *name;
+    VariableType type;
+} Symbol;
+
+typedef struct Table {
+    int size;
+    Symbol symbols[MAX_TABLE];
+} Table;
+
+void init_table(Table *table);
+
+boolean add_symbol(Table *table, char *name, VariableType type);
+
+VariableType find_symbol(Table *table, char *name);
+
 // Descriptor del archivo de entrada que utiliza Bison.
 extern FILE * yyin;
 
@@ -29,12 +61,6 @@ extern int yylex(void);
 
 // Función global del analizador sintáctico Bison.
 extern int yyparse(void);
-
-// Emular tipo "boolean".
-typedef enum {
-	false = 0,
-	true = 1
-} boolean;
 
 typedef int token;
 
