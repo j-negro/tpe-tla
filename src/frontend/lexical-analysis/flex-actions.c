@@ -71,7 +71,9 @@ token UnknownPatternAction(const char * lexeme) {
 
 token VariablePatternAction(char * lexeme) {
 	LogDebug("VariablePatternAction: '%s'.", lexeme);
-	yylval.string = lexeme;
+    char * toRet = (char*) malloc(strlen(lexeme));
+    strcpy(toRet, lexeme);
+	yylval.string = toRet;
 	return VARIABLE;
 }
 
