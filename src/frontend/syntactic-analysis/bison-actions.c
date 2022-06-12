@@ -26,24 +26,40 @@ int ProgramGrammarAction(const int value) {
 	return value;
 }
 
-int AdditionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("AdditionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Add(leftValue, rightValue);
+Expression* AdditionExpressionGrammarAction(Expression* leftValue, Expression* rightValue) {
+	//LogDebug("AdditionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = PLUS_EXPRESSION;
+	return toReturn;
 }
 
-int SubtractionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("SubtractionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Subtract(leftValue, rightValue);
+Expression* SubtractionExpressionGrammarAction(Expression* leftValue, Expression* rightValue) {
+	//LogDebug("SubtractionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = SUB_EXPRESSION;
+	return toReturn;
 }
 
-int MultiplicationExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("MultiplicationExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Multiply(leftValue, rightValue);
+Expression* MultiplicationExpressionGrammarAction(Expression* leftValue, Expression* rightValue) {
+	//LogDebug("MultiplicationExpressionGrammarAction(%d, %d)", leftValue, rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = MUL_EXPRESSION;
+	return toReturn;
 }
 
-int DivisionExpressionGrammarAction(const int leftValue, const int rightValue) {
-	LogDebug("DivisionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return Divide(leftValue, rightValue);
+Expression* DivisionExpressionGrammarAction(Expression* leftValue, Expression* rightValue) {
+	//LogDebug("DivisionExpressionGrammarAction(%d, %d)", leftValue, rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = DIV_EXPRESSION;
+	return toReturn;
 }
 
 int FactorExpressionGrammarAction(const int value) {
@@ -71,25 +87,41 @@ int ComparisonExpressionGrammarAction(const int value){
 	return value;
 }
 
-int BooleanAndExpressionGrammarAction(const int leftValue,const int rightValue){
-	LogDebug("BooleanAndExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return 0;
+Expression* BooleanAndExpressionGrammarAction(Expression * leftValue,Expression * rightValue){
+	//LogDebug("BooleanAndExpressionGrammarAction(%d, %d)", leftValue->value, rightValue->value);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = AND_EXPRESSION;
+	return toReturn;
 }
 
-int BooleanOrExpressionGrammarAction(const int leftValue,const int rightValue){
-	LogDebug("BooleanOrExpressionGrammarAction(%d, %d)", leftValue, rightValue);
-	return 0;
+Expression* BooleanOrExpressionGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("BooleanOrExpressionGrammarAction(%d, %d)", leftValue, rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = OR_EXPRESSION;
+	return toReturn;
 }
 
-int BooleanNotExpressionGrammarAction(const int value){
-	LogDebug("BooleanNotExpressionGrammarAction(%d)", value);
-	return 0;
+Expression* BooleanNotExpressionGrammarAction(Expression* expression){
+	//LogDebug("BooleanNotExpressionGrammarAction(%d)", value);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = expression;
+	toReturn->type = NOT_EXPRESSION;
+	return toReturn;
 }
-//-------------------------------------------Music Assignment----------------------------------------------
+//-------------------------------------------Assignments----------------------------------------------
 
-int MusicTypeToneDefinitionGrammarAction(const int value){
+MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value){
 	LogDebug("MusicTypeToneDefinitionGrammarAction(%d)", value);
-	return 0;
+	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+	musicAssignment->type = TYPE_DEFINITION_MUSIC_ASSIGNMENT;
+	musicAssignment->musicAssignmentType = TONE_ASSIGNMENT;
+	musicAssignment->variable = value;
+	//musicAssignment->value = tone; a chequear porque tone lo definimos como un token
+	return musicAssignment;
 }
 
 int MusicTypeRythmDefinitionGrammarAction(const int value){
@@ -127,9 +159,32 @@ int MusicAssigmentRythmDefinitionGrammarAction(const int value){
 	return 0;
 }
 
-int MusicAssigmentBpmDefinitionGrammarAction(const int value){
-	LogDebug("MusicAssigmentBpmDefinitionGrammarAction(%d)", value);
-	return 0;
+MusicAssignment* MusicAssigmentBpmDefinitionGrammarAction(MusicAssignment* musicAsignment,Expression* bpm){
+	//LogDebug("MusicAssigmentBpmDefinitionGrammarAction(%d)", value);
+	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+	MusicAssignmentValue value;
+	value.bpm = bpm;
+	musicAssignment->musicAssignmentType = BPM_ASSIGNMENT;
+	musicAssignment->type = ASSIGNMENT_MUSIC_ASSIGNMENT;
+	musicAssignment->variable = musicAsignment;
+	musicAssignment->value = value;
+	return musicAssignment;
+}
+
+Assigment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightvalue){
+	Assigment * assigment =(Assigment*) malloc(sizeof(Assigment));
+	assigment->expression = rightvalue;
+	assigment->variable = leftValue;
+	assigment->type = TYPE_DEFINITION_ASSIGNMENT;
+	return assigment;
+}
+
+Assigment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue){
+	Assigment * assigment =(Assigment*) malloc(sizeof(Assigment));
+	assigment->expression = rightValue;
+	assigment->variable = leftValue;
+	assigment->type = VARIABLE_NAME_ASSIGNMENT;
+	return assigment;
 }
 
 int VariableRaiseOctaveTypeDefinitionGrammarAction(const int value){
@@ -142,9 +197,16 @@ int VariableLowerToneDefinitionGrammarAction(const int value){
 	return 0;
 }
 
-int VariableRemoveIntegerDefinitionGrammarAction(const int value){
-	LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
-	return 0;
+MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* expression){
+	//LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
+	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+	MusicAssignmentValue value;
+	value.bpm = expression;
+	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
+	musicAssignment->type = VARIABLE_NAME_ASSIGNMENT;
+	musicAssignment->variable = variableName;
+	musicAssignment->value = value;
+	return musicAssignment;
 }
 
 int VariableAdditionTypeDefinitionGrammarAction(const int value){
@@ -192,34 +254,58 @@ int ToneGreaterEqualComparisonGrammarAction(const int leftValue, const int right
 	return 0;
 }
 
-int CalculationEqualComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("CalculationEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
+Expression* ExpressionEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("CalculationEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = EQUAL_EQUAL_EXPRESSION;
+	return toReturn;
 }
 
-int CalculationNotEqualComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("CalculationNotEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
+Expression* ExpressionNotEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("CalculationNotEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = NOTEQUAL_EXPRESSION;
+	return toReturn;
 }
 
-int CalculationLowerComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("CalculationLowerComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
+Expression* ExpressionLowerComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("CalculationLowerComparisonGrammarAction(%d,%d)",leftValue,rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = LOWER_EXPRESSION;
+	return toReturn;
 }
 
-int CalculationGreaterComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("CalculationGreaterComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
+Expression* ExpressionGreaterComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("CalculationGreaterComparisonGrammarAction(%d,%d)",leftValue,rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = GREATER_EXPRESSION;
+	return toReturn;
 }
 
-int CalculationGreaterEqualComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("CalculationGreaterEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
+Expression* ExpressionGreaterEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("CalculationGreaterEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = GREATER_EQUAL_EXPRESSION;
+	return toReturn;
 }
 
-int CalculationLowerEqualComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("CalculationLowerEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
+Expression* ExpressionLowerEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
+	//LogDebug("CalculationLowerEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->expression1 = leftValue;
+	toReturn->expression2 = rightValue;
+	toReturn->type = LOWER_EQUAL_EXPRESSION;
+	return toReturn;
 }
 //-------------------------------------------Insert section here--------------------------------------------
 int ExpressionFactorGrammarAction(const int value) {
@@ -232,9 +318,22 @@ int ConstantFactorGrammarAction(const int value) {
 	return value;
 }
 
-int IntegerConstantGrammarAction(const int value) {
-	LogDebug("IntegerConstantGrammarAction(%d)", value);
-	return value;
+Constant* IntegerConstantGrammarAction(int value) {
+	Constant* constant = (Constant*) malloc(sizeof(Constant));
+	ConstantValue constantValue;
+	constantValue.integer = value;
+	constant->type = INTEGER_CONSTANT;
+	constant->value = constantValue;
+	return constant;
+}
+
+Constant* BooleanConstantGrammarAction(boolean value){
+	Constant* constant = (Constant*) malloc(sizeof(Constant));
+	ConstantValue constantValue;
+	constantValue.boolean = value;
+	constant->type = BOOLEAN_CONSTANT;
+	constant->value = constantValue;
+	return constant;
 }
 
 int NoteVariableGrammarAction(const int value) {

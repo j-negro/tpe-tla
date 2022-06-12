@@ -8,7 +8,7 @@
 
 token IntegerPatternAction(const char * lexeme) {
 	LogDebug("IntegerPatternAction: '%s'.", lexeme);
-    yylval.integer = atoi(lexeme);
+    //yylval.integer = atoi(lexeme);
 	return INTEGER;
 }
 
@@ -37,4 +37,22 @@ token UnknownPatternAction(const char * lexeme) {
 token VariablePatternAction(const char * lexeme) {
 	LogDebug("VariablePatternAction: '%s'.", lexeme);
 	return VARIABLE;
+}
+
+token PlusOperatorPatternAction(const char * lexeme){
+	LogDebug("PlusOperatorPatternAction: '%s'.", lexeme);
+	//yylval.token = PLUS;
+	return PLUS;
+}
+
+token SubOperatorPatternAction(const char * lexeme){
+	LogDebug("SubOperatorPatternAction: '%s'.", lexeme);
+	//yylval.token = SUB;
+	return SUB;
+}
+
+token MulOperatorPatternAction(const char * lexeme){
+	LogDebug("MulOperatorPatternAction: '%s'.", lexeme);
+	//yylval.token = MUL;
+	return MUL;
 }

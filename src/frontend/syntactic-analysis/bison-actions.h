@@ -14,10 +14,10 @@
 int ProgramGrammarAction(const int value);
 
 // Expresión.
-int AdditionExpressionGrammarAction(const int leftValue, const int rightValue);
-int SubtractionExpressionGrammarAction(const int leftValue, const int rightValue);
-int MultiplicationExpressionGrammarAction(const int leftValue, const int rightValue);
-int DivisionExpressionGrammarAction(const int leftValue, const int rightValue);
+Expression* AdditionExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* SubtractionExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* MultiplicationExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* DivisionExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
 int FactorExpressionGrammarAction(const int value);
 
 //Statements
@@ -27,9 +27,9 @@ int WhileStatementGrammarAction(const int leftValue,const int rightValue);
 //Expresion booleana
 int VariableNameExpressionGrammarAction(const int value);
 int ComparisonExpressionGrammarAction(const int value);
-int BooleanAndExpressionGrammarAction(const int leftValue,const int rightValue);
-int BooleanOrExpressionGrammarAction(const int leftValue,const int rightValue);
-int BooleanNotExpressionGrammarAction(const int value);
+Expression* BooleanAndExpressionGrammarAction(Expression* leftValue,Expression* rightValue);
+Expression* BooleanOrExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* BooleanNotExpressionGrammarAction(Expression* expression);
 
 //Comparacion
 int RythmEqualComparisonGrammarAction(const int leftValue, const int rightValue );
@@ -40,15 +40,15 @@ int ToneLowerComparisonGrammarAction(const int leftValue, const int rightValue);
 int ToneGreaterComparisonGrammarAction(const int leftValue, const int rightValue);
 int ToneLowerEqualComparisonGrammarAction(const int leftValue, const int rightValue);
 int ToneGreaterEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int CalculationEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int CalculationNotEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int CalculationLowerComparisonGrammarAction(const int leftValue, const int rightValue);
-int CalculationGreaterComparisonGrammarAction(const int leftValue, const int rightValue);
-int CalculationGreaterEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int CalculationLowerEqualComparisonGrammarAction(const int leftValue, const int rightValue);
+Expression* ExpressionEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* ExpressionNotEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* ExpressionLowerComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* ExpressionGreaterComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* ExpressionGreaterEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* ExpressionLowerEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
 
-//MusicAssignment
-int MusicTypeToneDefinitionGrammarAction(const int value);
+//Assignments
+MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value);
 int MusicTypeRythmDefinitionGrammarAction(const int value);
 int MusicTypeDefinitionGrammarAction(const int value);
 int VariableToneTypeDefinitionGrammarAction(const int value);
@@ -56,11 +56,14 @@ int VariableRythmTypeDefinitionGrammarAction(const int value);
 int VariableBpmTypeDefinitionGrammarAction(const int value);
 int MusicAssigmentToneDefinitionGrammarAction(const int value);
 int MusicAssigmentRythmDefinitionGrammarAction(const int value);
-int MusicAssigmentBpmDefinitionGrammarAction(const int value);
+MusicAssignment* MusicAssigmentBpmDefinitionGrammarAction(MusicAssignment* leftValue,Expression* rightValue);
 int VariableRaiseOctaveTypeDefinitionGrammarAction(const int value);
 int VariableLowerToneDefinitionGrammarAction(const int value);
-int VariableRemoveIntegerDefinitionGrammarAction(const int value);
+MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* value);
 int VariableAdditionTypeDefinitionGrammarAction(const int value);
+
+Assigment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightValue);
+Assigment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue);
 
 // Factores.
 int ExpressionFactorGrammarAction(const int value);
@@ -68,7 +71,8 @@ int ConstantFactorGrammarAction(const int value);
 int VariableFactorGrammarAction(const int value);
 
 // Constantes.
-int IntegerConstantGrammarAction(const int value);
+Constant* IntegerConstantGrammarAction(int value);
+Constant* BooleanConstantGrammarAction(boolean value);
 
 // Variables.
 int NoteVariableGrammarAction(const int value);

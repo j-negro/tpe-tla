@@ -101,4 +101,11 @@ token RythmPatternAction(const char * lexeme);
 
 token VariablePatternAction(const char * lexeme);
 
+token PlusOperatorPatternAction(const char * lexeme);
+
+token SubOperatorPatternAction(const char * lexeme);
+
+token MulOperatorPatternAction(const char * lexeme);
+
+token DivOperatorPatternAction(const char * lexeme);
 #endif

@@ -122,14 +122,14 @@ block: sentence block
 	| %empty
 	;
 
-sentence: typeDefinition SEMICOLON
-	| assignment SEMICOLON
-	| musicTypeDefinition SEMICOLON
-	| musicAssignment SEMICOLON
-	| addNote SEMICOLON
-	| ifStatement
-	| whileStatement
-	| returnLine SEMICOLON
+sentence: typeDefinition SEMICOLON			{$$ = SentenceTypeDefinitionGrammarAction($1);}
+	| assignment SEMICOLON					{$$ = SentenceAssignmentGrammarAction($1);}
+	| musicTypeDefinition SEMICOLON			{$$ = SentenceMusicTypeDefinitionGrammarAction($1);}
+	| musicAssignment SEMICOLON				{$$ = SentenceMusicAssignmentDefinitionGrammarAction($1);}
+	| addNote SEMICOLON						{$$ = SentenceAddNoteGrammarAction($1);}
+	| ifStatement							{$$ = SentenceIfStatementGrammarAction($1);}
+	| whileStatement						{$$ = SentenceWhileStatementGrammarAction($1);}
+	| returnLine SEMICOLON					{$$ = SentenceReturnLineGrammarAction($1);}
 	;
 
 returnLine: RETURN variableName 
@@ -137,7 +137,7 @@ returnLine: RETURN variableName
 	;
 
 ifStatement: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS OPEN_BRACKETS block CLOSE_BRACKETS	 {$$ = ifStatementGrammarAction($3,$5);}
-	| ifStatement ELSE OPEN_BRACKETS block CLOSE_BRACKETS           
+	| ifStatement ELSE OPEN_BRACKETS block CLOSE_BRACKETS											 {$$ = ifElseStatementGrammarAction($1,$4);}           
 	;
 
 whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS OPEN_BRACKETS block CLOSE_BRACKETS {$$ = WhileStatementGrammarAction($3,$5);}
@@ -146,16 +146,16 @@ whileStatement: WHILE OPEN_PARENTHESIS expression CLOSE_PARENTHESIS OPEN_BRACKET
 expression: expression AND expression						{$$ = BooleanAndExpressionGrammarAction($1, $3);}
 	| expression OR expression						{$$ = BooleanOrExpressionGrammarAction($1, $3);}
 	| NOT expression								{$$ = BooleanNotExpressionGrammarAction($2);}
-	| expression PLUS expression
-	| expression SUB expression
-	| expression MUL expression
-	| expression DIV expression
-	| expression EQUAL_EQUAL expression			{$$ = CalculationEqualComparisonGrammarAction($1, $3);}
-	| expression NOTEQUAL expression				{$$ = CalculationNotEqualComparisonGrammarAction($1, $3);}
-	| expression LOWER expression					{$$ = CalculationLowerComparisonGrammarAction($1, $3);}
-	| expression GREATER expression				{$$ = CalculationGreaterComparisonGrammarAction($1, $3);}
-	| expression LOWER_EQUAL expression			{$$ = CalculationLowerEqualComparisonGrammarAction($1, $3);}
-	| expression GREATER_EQUAL expression			{$$ = CalculationGreaterEqualComparisonGrammarAction($1, $3);}
+	| expression PLUS expression					{$$ = PlusExpressionGrammarAction($1, $3);}
+	| expression SUB expression						{$$ = SubExpressionGrammarAction($1, $3);}
+	| expression MUL expression						{$$ = MulExpressionGrammarAction($1, $3);}
+	| expression DIV expression						{$$ = DivExpressionGrammarAction($1, $3);}
+	| expression EQUAL_EQUAL expression			{$$ = ExpressionEqualComparisonGrammarAction($1, $3);}
+	| expression NOTEQUAL expression				{$$ = ExpressionNotEqualComparisonGrammarAction($1, $3);}
+	| expression LOWER expression					{$$ = ExpressionLowerComparisonGrammarAction($1, $3);}
+	| expression GREATER expression				{$$ = ExpressionGreaterComparisonGrammarAction($1, $3);}
+	| expression LOWER_EQUAL expression			{$$ = ExpressionLowerEqualComparisonGrammarAction($1, $3);}
+	| expression GREATER_EQUAL expression			{$$ = ExpressionGreaterEqualComparisonGrammarAction($1, $3);}
 	| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
 	| variableName
 	| constant
@@ -165,8 +165,8 @@ expression: expression AND expression						{$$ = BooleanAndExpressionGrammarActi
 addNote: variableName ADD variableName
 	;
 
-assignment: typeDefinition EQUAL expression
-	| variableName EQUAL expression
+assignment: typeDefinition EQUAL expression  	{$$ = typeDefinitionAssignmentGrammarAction($1, $3)}
+	| variableName EQUAL expression				{$$ = variableNameAssignmentGrammarAction($1, $3)}
 	;
 
 musicAssignment: musicTypeDefinition TONE_DEF TONE			{$$ = MusicTypeToneDefinitionGrammarAction($1);}
@@ -174,14 +174,14 @@ musicAssignment: musicTypeDefinition TONE_DEF TONE			{$$ = MusicTypeToneDefiniti
 	| musicTypeDefinition BPM expression					{$$ = MusicTypeDefinitionGrammarAction($1);}
 	| variableName TONE_DEF TONE							{$$ = VariableToneTypeDefinitionGrammarAction($1);}
 	| variableName RYTHM_DEF RYTHM							{$$ = VariableRythmTypeDefinitionGrammarAction($1);}
-	| variableName BPM expression							{$$ = VariableBpmTypeDefinitionGrammarAction($1);}
+	| variableName BPM expression							{$$ = VariableBpmTypeDefinitionGrammarAction($1, $3);}
 	| musicAssignment TONE_DEF TONE							{$$ = MusicAssigmentToneDefinitionGrammarAction($1);}
 	| musicAssignment RYTHM_DEF RYTHM						{$$ = MusicAssigmentRythmDefinitionGrammarAction($1);}
-	| musicAssignment BPM expression							{$$ = MusicAssigmentBpmDefinitionGrammarAction($1);}
+	| musicAssignment BPM expression						{$$ = MusicAssigmentBpmDefinitionGrammarAction($1, $3);}
 	| variableName RAISE_OCTAVE								{$$ = VariableRaiseOctaveTypeDefinitionGrammarAction($1);}
 	| variableName LOWER_TONE								{$$ = VariableLowerToneDefinitionGrammarAction($1);}
-	| variableName REMOVE expression						{$$ = VariableRemoveIntegerDefinitionGrammarAction($1);}
-	| variableName ADD variableName expression				{$$ = VariableAdditionTypeDefinitionGrammarAction($1);}
+	| variableName REMOVE expression						{$$ = VariableRemoveIntegerDefinitionGrammarAction($1, $3);}
+	| variableName ADD variableName expression				{$$ = VariableAdditionTypeDefinitionGrammarAction($1, $3, $4);}
 	;
 
 typeDefinition: BOOLEAN_DEF variableName
@@ -192,10 +192,10 @@ musicTypeDefinition: MELODY variableName
 	| NOTE variableName
 	;
 
-constant: RYTHM
-	| TONE
-	| INTEGER
-	| BOOLEAN
+constant: RYTHM												{$$ = RythmConstantGrammarAction($1);}
+	| TONE													{$$ = ToneConstantGrammarAction($1);}
+	| INTEGER												{$$ = IntegerConstantGrammarAction($1);}
+	| BOOLEAN												{$$ = BooleanConstantGrammarAction($1);}
 	;
 
 getter: variableName DOT RYTHM_DEF
