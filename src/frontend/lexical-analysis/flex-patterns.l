@@ -67,7 +67,7 @@ char            [a-zA-Z_]
 "remove"                                    { return REMOVE; }
 "duration"                                  { return DURATION; }
 
-false|true                                  { return BOOLEAN; }
+false|true                                  { return BooleanPatternAction(yytext); }
 
 [A-G][#b]?[2-6]                                  { return TonePatternAction(yytext); }
 
