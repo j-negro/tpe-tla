@@ -89,6 +89,9 @@
  * (a.k.a. DFA), como mecanismo de escaneo y reconocimiento.
  */
 
+
+token BooleanPatternAction(const char * lexeme);
+
 token IntegerPatternAction(const char * lexeme);
 
 void IgnoredPatternAction(const char * lexeme);
@@ -99,7 +102,7 @@ token TonePatternAction(const char * lexeme);
 
 token RythmPatternAction(const char * lexeme);
 
-token VariablePatternAction(const char * lexeme);
+token VariablePatternAction(char * lexeme);
 
 token PlusOperatorPatternAction(const char * lexeme);
 

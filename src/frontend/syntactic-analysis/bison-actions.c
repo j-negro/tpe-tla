@@ -1,6 +1,7 @@
 #include "../../backend/domain-specific/calculator.h"
 #include "../../backend/support/logger.h"
 #include "bison-actions.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -19,11 +20,11 @@ void yyerror(const char * string) {
 	LogErrorRaw("\n\n");
 }
 
-int ProgramGrammarAction(const int value) {
+Program *ProgramGrammarAction(Block* value) {
 	LogDebug("ProgramGrammarAction(%d)", value);
-	state.succeed = true;
-	state.result = value;
-	return value;
+	Program * program = (Program*) malloc(sizeof(Program));
+    program->block =value;
+	return program;
 }
 
 Expression* AdditionExpressionGrammarAction(Expression* leftValue, Expression* rightValue) {
@@ -62,30 +63,95 @@ Expression* DivisionExpressionGrammarAction(Expression* leftValue, Expression* r
 	return toReturn;
 }
 
-int FactorExpressionGrammarAction(const int value) {
-	LogDebug("FactorExpressionGrammarAction(%d)", value);
-	return value;
+Expression* ConstantExpressionGrammarAction(Constant * constant) {
+    Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+    toReturn->type = CONSTANT_EXPRESSION;
+    toReturn->value = constant;
+    return toReturn;
+}
+//--------------------------------------------Sentences-------------------------------------------------------------
+
+Sentence*  SentenceTypeDefinitionGrammarAction(TypeDefinition* typeDefintion){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = TYPE_DEFINITION_SENTENCE;
+	sentence->sentence =typeDefintion;
+	return sentence;
+}
+
+Sentence*  SentenceAssignmentGrammarAction(Assigment* assignment){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = TYPE_DEFINITION_ASSIGNMENT;
+	sentence->sentence = assignment;
+	return sentence;
+}
+
+Sentence* SentenceMusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = MUSIC_TYPE_DEFINITION_SENTENCE;
+	sentence->sentence = musicTypeDefinition;
+	return sentence;
+}
+
+Sentence*  SentenceMusicAssignmentDefinitionGrammarAction(MusicAssignment* musicAssignment){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = MUSIC_ASSIGNMENT_SENTENCE;
+	sentence->sentence = musicAssignment;
+	return sentence;
+}
+
+Sentence*  SentenceAddNoteGrammarAction(AddNote* addNote){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = ADD_NOTE_SENTENCE;
+	sentence->sentence = addNote;
+	return sentence;
+}
+
+Sentence*  SentenceIfStatementGrammarAction(IfStatement* ifStatement){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = IF_STATEMENT_SENTENCE;
+	sentence->sentence = ifStatement;
+	return sentence;
+}
+
+Sentence*  SentenceWhileStatementGrammarAction(WhileStatement* whileStatement){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = WHILE_STATEMENT_SENTENCEM;
+	sentence->sentence = whileStatement;
+	return sentence;
+}
+
+Sentence*  SentenceReturnLineGrammarAction(ReturnLine* returnLine){
+	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
+	sentence->type = RETURN_LINE_SENTENCE;
+	sentence->sentence = returnLine;
+	return sentence;
 }
 //--------------------------------------------Statements------------------------------------------------------------
-int ifStatementGrammarAction(const int leftValue,const int rightValue){
-	LogDebug("IfStatementGrammarAction(%d, %d)", leftValue, rightValue);
-	return 0;
+IfStatement *ifStatementGrammarAction(Expression * expression, Block* block){
+	//LogDebug("IfStatementGrammarAction(%d, %d)", leftValue, rightValue);
+    IfStatement * ifStatement = (IfStatement*) malloc(sizeof (IfStatement));
+    ifStatement->expression = expression;
+    ifStatement->block = block;
+    ifStatement->type = IF_TYPE;
+	return ifStatement;
 }
 
-int WhileStatementGrammarAction(const int leftValue,const int rightValue){
-	LogDebug("WhileStatementGrammarAction(%d, %d)", leftValue, rightValue);
-	return 0;
+IfStatement *ifElseStatementGrammarAction(IfStatement * ifS, Block* block) {
+    IfStatement * ifStatement = (IfStatement*) malloc(sizeof (IfStatement));
+    ifStatement->block = block;
+    ifStatement->type = IF_ELSE_TYPE;
+    ifStatement->expression = ifS;
+
+    return ifStatement;
+}
+
+WhileStatement *WhileStatementGrammarAction(Expression *expression, Block* block){
+    WhileStatement * whileStatement = (WhileStatement*) malloc(sizeof (WhileStatement));
+    whileStatement->expression = expression;
+    whileStatement->block = block;
+    return whileStatement;
 }
 //--------------------------------------------Expression---------------------------------------------------
-int VariableNameExpressionGrammarAction(const int value){
-	LogDebug("VariableNameExpressionGrammarAction(%d)", value);
-	return value;
-}
-
-int ComparisonExpressionGrammarAction(const int value){
-	LogDebug("ComparisonExpressionGrammarAction(%d)", value);
-	return value;
-}
 
 Expression* BooleanAndExpressionGrammarAction(Expression * leftValue,Expression * rightValue){
 	//LogDebug("BooleanAndExpressionGrammarAction(%d, %d)", leftValue->value, rightValue->value);
@@ -112,51 +178,88 @@ Expression* BooleanNotExpressionGrammarAction(Expression* expression){
 	toReturn->type = NOT_EXPRESSION;
 	return toReturn;
 }
+
+Expression* ExpressionGetterGrammarAction(Getter* getter){
+    Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+    toReturn->type = GETTER_EXPRESSION;
+    toReturn->value = getter;
+    return toReturn;
+}
 //-------------------------------------------Assignments----------------------------------------------
 
-MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value){
+MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value, tone tone){
 	LogDebug("MusicTypeToneDefinitionGrammarAction(%d)", value);
 	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
 	musicAssignment->type = TYPE_DEFINITION_MUSIC_ASSIGNMENT;
 	musicAssignment->musicAssignmentType = TONE_ASSIGNMENT;
 	musicAssignment->variable = value;
-	//musicAssignment->value = tone; a chequear porque tone lo definimos como un token
+	musicAssignment->value.tone = tone;
 	return musicAssignment;
 }
 
-int MusicTypeRythmDefinitionGrammarAction(const int value){
-	LogDebug("MusicTypeRythmDefinitionGrammarAction(%d)", value);
+MusicAssignment *MusicTypeRythmDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, rythm Rythm){
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->type = TYPE_DEFINITION_MUSIC_ASSIGNMENT;
+    musicAssignment->musicAssignmentType = RYTHM_ASSIGNMENT;
+    musicAssignment->variable = musicTypeDefinition;
+    musicAssignment->value.rythm = Rythm;
+    return musicAssignment;
+}
+
+MusicAssignment *MusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, Expression * Bpm){
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->type = TYPE_DEFINITION_MUSIC_ASSIGNMENT;
+    musicAssignment->musicAssignmentType = BPM_ASSIGNMENT;
+    musicAssignment->variable = musicTypeDefinition;
+    musicAssignment->value.bpm = Bpm;
+    return musicAssignment;
+}
+
+MusicAssignment *VariableToneTypeDefinitionGrammarAction(VariableName* variableName, tone tone){
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->type = (MusicAssignmentVariableType) VARIABLE_NAME_ASSIGNMENT;
+    musicAssignment->musicAssignmentType = TONE_ASSIGNMENT;
+    musicAssignment->variable = variableName;
+    musicAssignment->value.tone = tone;
+    return musicAssignment;
+}
+
+MusicAssignment *VariableRythmTypeDefinitionGrammarAction(VariableName * variableName, rythm rythm) {
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->musicAssignmentType = RYTHM_ASSIGNMENT;
+    musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
+    musicAssignment->value.rythm = rythm;
+    musicAssignment->variable = variableName;
+
+	return musicAssignment;
+}
+
+MusicAssignment* VariableBpmTypeDefinitionGrammarAction(VariableName* variableName, Expression* bpm){
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->musicAssignmentType = BPM_ASSIGNMENT;
+    musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
+    musicAssignment->value.bpm = bpm;
+    musicAssignment->variable = variableName;
+
 	return 0;
 }
 
-int MusicTypeDefinitionGrammarAction(const int value){
-	LogDebug("MusicTypeDefinitionGrammarAction(%d)", value);
-	return 0;
+MusicAssignment* MusicAssigmentToneDefinitionGrammarAction(MusicAssignment* ms, tone tone) {
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+	musicAssignment->musicAssignmentType = TONE_ASSIGNMENT;
+    musicAssignment->type = ASSIGNMENT_MUSIC_ASSIGNMENT;
+    musicAssignment->value.tone = tone;
+
+	return musicAssignment;
 }
 
-int VariableToneTypeDefinitionGrammarAction(const int value){
-	LogDebug("VariableToneTypeDefinitionGrammarAction(%d)", value);
-	return 0;
-}
+MusicAssignment* MusicAssigmentRythmDefinitionGrammarAction(MusicAssignment* ms, rythm rythm) {
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->type = ASSIGNMENT_MUSIC_ASSIGNMENT;
+    musicAssignment->musicAssignmentType = RYTHM_ASSIGNMENT;
+    musicAssignment->value.rythm = rythm;
 
-int VariableRythmTypeDefinitionGrammarAction(const int value){
-	LogDebug("VariableRythmTypeDefinitionGrammarAction(%d)", value);
-	return 0;
-}
-
-int VariableBpmTypeDefinitionGrammarAction(const int value){
-	LogDebug("VariableBpmTypeDefinitionGrammarAction(%d)", value);
-	return 0;
-}
-
-int MusicAssigmentToneDefinitionGrammarAction(const int value){
-	LogDebug("MusicAssigmentToneDefinitionGrammarAction(%d)", value);
-	return 0;
-}
-
-int MusicAssigmentRythmDefinitionGrammarAction(const int value){
-	LogDebug("MusicAssigmentRythmDefinitionGrammarAction(%d)", value);
-	return 0;
+	return musicAssignment;
 }
 
 MusicAssignment* MusicAssigmentBpmDefinitionGrammarAction(MusicAssignment* musicAsignment,Expression* bpm){
@@ -187,72 +290,48 @@ Assigment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expressi
 	return assigment;
 }
 
-int VariableRaiseOctaveTypeDefinitionGrammarAction(const int value){
-	LogDebug("VariableRaiseOctaveTypeDefinitionGrammarAction(%d)", value);
-	return 0;
+MusicAssignment* VariableRaiseOctaveTypeDefinitionGrammarAction(VariableName* variableName){
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->musicAssignmentType = RAISE_OCTAVE_ASSIGNMENT;
+    musicAssignment->variable = variableName;
+    return musicAssignment;
 }
-
-int VariableLowerToneDefinitionGrammarAction(const int value){
-	LogDebug("VariableLowerToneDefinitionGrammarAction(%d)", value);
-	return 0;
-}
-
-MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* expression){
-	//LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
+MusicAssignment* VariableRemoveExpressionGrammarAction(VariableName* variableName, Expression* expression){
 	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
-	MusicAssignmentValue value;
-	value.bpm = expression;
 	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
-	musicAssignment->type = VARIABLE_NAME_ASSIGNMENT;
+	musicAssignment->type = (MusicAssignmentVariableType) VARIABLE_NAME_ASSIGNMENT;
 	musicAssignment->variable = variableName;
-	musicAssignment->value = value;
+	musicAssignment->value.bpm = expression;
 	return musicAssignment;
 }
 
-int VariableAdditionTypeDefinitionGrammarAction(const int value){
-	LogDebug("VariableAdditionTypeDefinitionGrammarAction(%d)", value);
-	return 0;
+MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variableName){
+	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+	musicAssignment->musicAssignmentType = LOWER_TONE_ASSIGNMENT;
+	musicAssignment->type = (MusicAssignmentVariableType) VARIABLE_NAME_ASSIGNMENT;
+	musicAssignment->variable = variableName;
+	return musicAssignment;
+}
+
+MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* expression) {
+	//LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
+	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
+	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
+	musicAssignment->variable = variableName;
+	musicAssignment->value.bpm = expression;
+	return musicAssignment;
+}
+
+MusicAssignment* VariableAdditionTypeDefinitionGrammarAction(VariableName* left, VariableName* right, Expression* expression) {
+    MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
+    musicAssignment->musicAssignmentType = ADD_ASSIGNMENT;
+    musicAssignment->variable = left;
+    musicAssignment->variableRight = right;
+    musicAssignment->value.bpm = expression;
 }
 //--------------------------------------------Comparison---------------------------------------------------
-int RythmEqualComparisonGrammarAction(const int leftValue, const int rightValue ){
-	LogDebug("RythmEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int RythmNotEqualComparisonGrammarAction(const int leftValue, const int rightValue ){
-	LogDebug("RythmNotEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int ToneEqualComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("ToneEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int ToneNotEqualComparisonGrammarAction(const int leftValue, const int rightValue){
-	LogDebug("ToneNotEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int ToneLowerComparisonGrammarAction(const int leftValue, const int rightValue ){
-	LogDebug("ToneLowerComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int ToneGreaterComparisonGrammarAction(const int leftValue, const int rightValue ){
-	LogDebug("ToneGreaterComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int ToneLowerEqualComparisonGrammarAction(const int leftValue, const int rightValue ){
-	LogDebug("ToneLowerEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
-
-int ToneGreaterEqualComparisonGrammarAction(const int leftValue, const int rightValue ){
-	LogDebug("ToneGreaterEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
-	return 0;
-}
 
 Expression* ExpressionEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
 	//LogDebug("CalculationEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
@@ -307,41 +386,158 @@ Expression* ExpressionLowerEqualComparisonGrammarAction(Expression* leftValue, E
 	toReturn->type = LOWER_EQUAL_EXPRESSION;
 	return toReturn;
 }
-//-------------------------------------------Insert section here--------------------------------------------
-int ExpressionFactorGrammarAction(const int value) {
-	LogDebug("ExpressionFactorGrammarAction(%d)", value);
-	return value;
+
+Expression* ParenthesisExpressionGrammarAction(Expression* expression){
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->type = PARENTHESIS_EXPRESSION;
+	toReturn->expression1 = expression;
+	return toReturn;
 }
 
-int ConstantFactorGrammarAction(const int value) {
-	LogDebug("ConstantFactorGrammarAction(%d)", value);
-	return value;
+Expression* VariableNameExpressionGrammarAction(VariableName* variableName){
+	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
+	toReturn->type = VARIABLE_EXPRESSION;
+	toReturn->value = variableName;
+	return toReturn;
 }
+//-------------------------------------------TypeDefinitionType--------------------------------------------
+TypeDefinition * BooleanTypeDefinitionGrammarAction(VariableName * variableName) {
+	TypeDefinition * typeDef = malloc(sizeof(TypeDefinition));
+	typeDef->type = INTEGER_DEFINITION;
+	typeDef->name = variableName;
+	return typeDef;
+}
+
+TypeDefinition * IntegerTypeDefinitionGrammarAction(VariableName * variableName) {
+	TypeDefinition * typeDef = malloc(sizeof(TypeDefinition));
+	typeDef->type = BOOLEAN_DEFINITION;
+	typeDef->name = variableName;
+	return typeDef;
+}
+
+//-------------------------------------------MusicTypeDefinitionType--------------------------------------------
+MusicTypeDefinition * MelodyMusicDefinitionTypeGrammarAction(VariableName * variableName) {
+	MusicTypeDefinition * musicTypeDef = malloc(sizeof(MusicTypeDefinition));
+	musicTypeDef->type = MELODY_DEFINITION;
+	musicTypeDef->name = variableName;
+	return musicTypeDef;
+}
+
+MusicTypeDefinition * NoteMusicDefinitionTypeGrammarAction(VariableName * variableName) {
+	MusicTypeDefinition * musicTypeDef = malloc(sizeof(MusicTypeDefinition));
+	musicTypeDef->type = NOTE_DEFINITION;
+	musicTypeDef->name = variableName;
+	return musicTypeDef;
+}
+
+
+//-------------------------------------------ConstantType--------------------------------------------
 
 Constant* IntegerConstantGrammarAction(int value) {
 	Constant* constant = (Constant*) malloc(sizeof(Constant));
-	ConstantValue constantValue;
-	constantValue.integer = value;
 	constant->type = INTEGER_CONSTANT;
-	constant->value = constantValue;
+	constant->value.integer = value;
 	return constant;
 }
 
 Constant* BooleanConstantGrammarAction(boolean value){
 	Constant* constant = (Constant*) malloc(sizeof(Constant));
-	ConstantValue constantValue;
-	constantValue.boolean = value;
 	constant->type = BOOLEAN_CONSTANT;
-	constant->value = constantValue;
+	constant->value.boolean = value;
 	return constant;
 }
 
-int NoteVariableGrammarAction(const int value) {
-	LogDebug("NoteVariableGrammarAction(%d)", value);
-	return value;
+Constant* ToneConstantGrammarAction(tone tone) {
+	Constant* constant = (Constant*) malloc(sizeof(Constant));
+	constant->type = TONE_CONSTANT;
+	constant->value.tone = tone;
+    return constant;
 }
 
-int VariableFactorGrammarAction(const int value) {
-	LogDebug("VariableFactorGrammarAction(%d)", value);
-	return value;
+Constant* RythmConstantGrammarAction(rythm rythm) {
+	Constant* constant = (Constant*) malloc(sizeof(Constant));
+	constant->type = RYTHM_CONSTANT;
+	constant->value.rythm = rythm;
+
+    return constant;
+}
+
+//-------------------------------------------AddNoteType--------------------------------------------
+
+AddNote* AddNoteGrammarAction(VariableName *melody, VariableName *note) {
+	AddNote* addNote = (AddNote*) malloc(sizeof(AddNote));
+	addNote->melody = melody;
+	addNote->note = note;
+
+    return addNote;
+}
+
+//-------------------------------------------ReturnLineType--------------------------------------------
+
+ReturnLine* ReturnVariableNameGrammarAction(VariableName *melody) {
+	ReturnLine* returnLine = (ReturnLine*) malloc(sizeof(ReturnLine));
+	returnLine->type = VARIABLE_NAME_RETURN;
+	returnLine->value = melody;
+
+    return returnLine;
+}
+
+ReturnLine* ReturnMusicTypeDefinitionGrammarAction(MusicTypeDefinition *musicTypeDefinition) {
+	ReturnLine* returnLine = (ReturnLine*) malloc(sizeof(ReturnLine));
+	returnLine->type = MUSIC_TYPE_DEFINITION_RETURN;
+	returnLine->value = musicTypeDefinition;
+
+    return returnLine;
+}
+
+//-------------------------------------------BlockType--------------------------------------------
+
+Block * BlockSentenceGrammarAction(Sentence *sentence, Block *otherBlock) {
+    Block* block = (Block*) malloc(sizeof(Block));
+    block->block = block;
+    block->sentence = sentence;
+    block->type = FILLED_BLOCK;
+
+    return block;
+}
+//-------------------------------------------Getters--------------------------------------------
+
+Getter * RythymGetterGrammarAction(VariableName * variableName) {
+    Getter * getter = malloc(sizeof(Getter));
+    getter->name = variableName;
+    getter->type = RYTHM_GETTER;
+    return getter;
+}
+Getter * ToneGetterGrammarAction(VariableName * variableName) {
+    Getter * getter = malloc(sizeof(Getter));
+    getter->name = variableName;
+    getter->type = TONE_GETTER;
+    return getter;
+}
+Getter * BpmGetterGrammarAction(VariableName * variableName) {
+    Getter * getter = malloc(sizeof(Getter));
+    getter->name = variableName;
+    getter->type = BPM_GETTER;
+    return getter;
+}
+Getter * DurationGetterGrammarAction(VariableName * variableName) {
+    Getter * getter = malloc(sizeof(Getter));
+    getter->name = variableName;
+    getter->type = DURATION_GETTER;
+    return getter;
+}
+
+//-------------------------------------------Variable--------------------------------------------
+
+VariableName * VariableNameGrammarAction(char * variable) {
+	VariableName * variableName = malloc(sizeof(VariableName));
+    strcpy(variableName->name, variable);
+	return variableName;
+}
+
+//----------------------------------------------------------------------------------------------------
+Block* EmptyBlockSentenceGrammarAction(){
+    Block * block = malloc(sizeof(Block));
+    block->type = EMPTY_BLOCK;
+    return block;
 }

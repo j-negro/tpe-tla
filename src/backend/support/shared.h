@@ -15,7 +15,8 @@ extern FILE * yyout;
 // Variable global que contiene el número de la línea analizada.
 extern int yylineno;
 
-extern int yylval;
+// extern int yylval;
+// extern YYSTYPE yylval;
 
 // Token actual en el tope de la pila del analizador Bison.
 extern char * yytext;
@@ -42,6 +43,11 @@ typedef enum {
 	FLAT,
 	SHARP
 } NoteType;
+
+typedef enum {
+    EMPTY_BLOCK,
+    FILLED_BLOCK
+} BlockType;
 
 typedef enum {
 	C,
@@ -169,6 +175,7 @@ typedef struct {
 	MusicAssignmentVariableType type;
 	// puntero que depende del type (musicTypeDefinition, variableName, musicAssignment)
 	void * variable;
+    void * variableRight;
 
 	MusicAssignmentType musicAssignmentType;
 
@@ -259,6 +266,7 @@ typedef struct {
 
 struct Block {
 	Sentence * sentence;
+    BlockType type;
 	struct Block * block;
 };
 

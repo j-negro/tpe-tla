@@ -11,70 +11,100 @@
  */
 
 // Programa.
-int ProgramGrammarAction(const int value);
+Program *ProgramGrammarAction(Block* block);
 
 // Expresión.
 Expression* AdditionExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* SubtractionExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* MultiplicationExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* DivisionExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
-int FactorExpressionGrammarAction(const int value);
+Expression* ExpressionGetterGrammarAction(Getter* getter);
+Expression* ConstantExpressionGrammarAction(Constant * constant);
+
+//Sentences
+Sentence*  SentenceTypeDefinitionGrammarAction(TypeDefinition* typeDefintion);
+Sentence*  SentenceAssignmentGrammarAction(Assigment* assignment);
+Sentence*  SentenceMusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition);
+Sentence*  SentenceMusicAssignmentDefinitionGrammarAction(MusicAssignment* musicAssignment);
+Sentence*  SentenceAddNoteGrammarAction(AddNote* addNote);
+Sentence*  SentenceIfStatementGrammarAction(IfStatement* ifStatement);
+Sentence*  SentenceWhileStatementGrammarAction(WhileStatement* whileStatement);
+Sentence*  SentenceReturnLineGrammarAction(ReturnLine* returnLine);
 
 //Statements
-int ifStatementGrammarAction(const int leftValue,const int rightValue);
-int WhileStatementGrammarAction(const int leftValue,const int rightValue);
+IfStatement *ifStatementGrammarAction(Expression * expression, Block* block);
+IfStatement *ifElseStatementGrammarAction(IfStatement * ifS, Block* block);
+
+WhileStatement *WhileStatementGrammarAction(Expression *expression, Block* block);
 
 //Expresion booleana
-int VariableNameExpressionGrammarAction(const int value);
-int ComparisonExpressionGrammarAction(const int value);
 Expression* BooleanAndExpressionGrammarAction(Expression* leftValue,Expression* rightValue);
 Expression* BooleanOrExpressionGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* BooleanNotExpressionGrammarAction(Expression* expression);
 
 //Comparacion
-int RythmEqualComparisonGrammarAction(const int leftValue, const int rightValue );
-int RythmNotEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int ToneEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int ToneNotEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int ToneLowerComparisonGrammarAction(const int leftValue, const int rightValue);
-int ToneGreaterComparisonGrammarAction(const int leftValue, const int rightValue);
-int ToneLowerEqualComparisonGrammarAction(const int leftValue, const int rightValue);
-int ToneGreaterEqualComparisonGrammarAction(const int leftValue, const int rightValue);
 Expression* ExpressionEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* ExpressionNotEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* ExpressionLowerComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* ExpressionGreaterComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* ExpressionGreaterEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
 Expression* ExpressionLowerEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue);
+Expression* ParenthesisExpressionGrammarAction(Expression* expression);
+Expression* VariableNameExpressionGrammarAction(VariableName* variableName);
 
 //Assignments
-MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value);
-int MusicTypeRythmDefinitionGrammarAction(const int value);
-int MusicTypeDefinitionGrammarAction(const int value);
-int VariableToneTypeDefinitionGrammarAction(const int value);
-int VariableRythmTypeDefinitionGrammarAction(const int value);
-int VariableBpmTypeDefinitionGrammarAction(const int value);
-int MusicAssigmentToneDefinitionGrammarAction(const int value);
-int MusicAssigmentRythmDefinitionGrammarAction(const int value);
+MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value, tone Tone);
+MusicAssignment *MusicTypeRythmDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, rythm Rythm);
+MusicAssignment *MusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, Expression * Bpm);
+MusicAssignment *VariableToneTypeDefinitionGrammarAction(VariableName* variableName, tone tone);
+MusicAssignment * VariableRythmTypeDefinitionGrammarAction(VariableName * variableName, rythm rythm);
+MusicAssignment* VariableBpmTypeDefinitionGrammarAction(VariableName* variableName, Expression* expression);
+MusicAssignment* MusicAssigmentToneDefinitionGrammarAction(MusicAssignment* ms, tone tone);
+MusicAssignment* MusicAssigmentRythmDefinitionGrammarAction(MusicAssignment* ms, rythm rythm);
 MusicAssignment* MusicAssigmentBpmDefinitionGrammarAction(MusicAssignment* leftValue,Expression* rightValue);
-int VariableRaiseOctaveTypeDefinitionGrammarAction(const int value);
-int VariableLowerToneDefinitionGrammarAction(const int value);
+MusicAssignment* VariableRaiseOctaveTypeDefinitionGrammarAction(VariableName* variableName);
+MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variableName);
+MusicAssignment* VariableRemoveExpressionGrammarAction(VariableName* variableName, Expression* expression);
 MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* value);
-int VariableAdditionTypeDefinitionGrammarAction(const int value);
+MusicAssignment* VariableAdditionTypeDefinitionGrammarAction(VariableName* left, VariableName* right, Expression* expression);
+
 
 Assigment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightValue);
 Assigment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue);
 
-// Factores.
-int ExpressionFactorGrammarAction(const int value);
-int ConstantFactorGrammarAction(const int value);
-int VariableFactorGrammarAction(const int value);
+// TypeDefinitions
+TypeDefinition * BooleanTypeDefinitionGrammarAction(VariableName * variableName);
+TypeDefinition * IntegerTypeDefinitionGrammarAction(VariableName * variableName);
+
+// MusicTypeDefinitions
+MusicTypeDefinition * MelodyMusicDefinitionTypeGrammarAction(VariableName * variableName);
+MusicTypeDefinition * NoteMusicDefinitionTypeGrammarAction(VariableName * variableName);
+
 
 // Constantes.
 Constant* IntegerConstantGrammarAction(int value);
 Constant* BooleanConstantGrammarAction(boolean value);
+Constant* ToneConstantGrammarAction(tone tone);
+Constant* RythmConstantGrammarAction(rythm rythm);
 
-// Variables.
-int NoteVariableGrammarAction(const int value);
+//Getter
+Getter * RythymGetterGrammarAction(VariableName * variableName);
+Getter * ToneGetterGrammarAction(VariableName * variableName);
+Getter * BpmGetterGrammarAction(VariableName * variableName);
+Getter * DurationGetterGrammarAction(VariableName * variableName);
 
+// Add note
+AddNote* AddNoteGrammarAction(VariableName *melody, VariableName *note);
+
+// Return Line
+ReturnLine* ReturnVariableNameGrammarAction(VariableName *melody);
+ReturnLine* ReturnMusicTypeDefinitionGrammarAction(MusicTypeDefinition *musicTypeDefinition);
+
+// Block
+Block * BlockSentenceGrammarAction(Sentence *sentence, Block *block);
+
+//
+VariableName * VariableNameGrammarAction(char * variable);
+
+Block* EmptyBlockSentenceGrammarAction();
 #endif
