@@ -77,7 +77,7 @@ Sentence*  SentenceTypeDefinitionGrammarAction(TypeDefinition* typeDefintion){
     LogDebug("SentenceTypeDefinitionGrammarAction");
 	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
 	sentence->type = TYPE_DEFINITION_SENTENCE;
-	sentence->sentence =typeDefintion;
+	sentence->sentence = typeDefintion;
 	return sentence;
 }
 
