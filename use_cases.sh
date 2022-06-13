@@ -3,10 +3,10 @@
 # and save errors in array
 
 errors=( )
-for file in ./use_cases/*
+cd use_cases
+for file in *
 do
-  echo "Compiling $file"
-  cat "$file" | ./bin/Compiler
+  cat "$file" | ../bin/Compiler &> ../logs/"$file".log
   if [ $? -ne 0 ]; then
     errors[${#errors[@]}]=$file
   fi
