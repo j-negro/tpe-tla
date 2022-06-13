@@ -15,7 +15,7 @@
 	Expression* expression;
 	AddNote* addNote;
 	MusicAssignment* musicAssignment;
-	Assigment* assignment;
+	Assignment* assignment;
 	TypeDefinition* typeDefinition;
 	MusicTypeDefinition* musicTypeDefinition;
 	Getter* getter;
@@ -162,6 +162,7 @@ expression: expression AND expression						{$$ = BooleanAndExpressionGrammarActi
 	| getter									{$$ = ExpressionGetterGrammarAction($1);}
 	;
 
+// TODO: rename to addMusic?
 addNote: variableName ADD variableName						{$$ = AddNoteGrammarAction($1, $3);}
 	;
 
@@ -175,9 +176,9 @@ musicAssignment: musicTypeDefinition TONE_DEF TONE			{$$ = MusicTypeToneDefiniti
 	| variableName TONE_DEF TONE							{$$ = VariableToneTypeDefinitionGrammarAction($1, $3);}
 	| variableName RYTHM_DEF RYTHM							{$$ = VariableRythmTypeDefinitionGrammarAction($1, $3);}
 	| variableName BPM expression							{$$ = VariableBpmTypeDefinitionGrammarAction($1, $3);}
-	| musicAssignment TONE_DEF TONE							{$$ = MusicAssigmentToneDefinitionGrammarAction($1, $3);}
-	| musicAssignment RYTHM_DEF RYTHM						{$$ = MusicAssigmentRythmDefinitionGrammarAction($1, $3);}
-	| musicAssignment BPM expression						{$$ = MusicAssigmentBpmDefinitionGrammarAction($1, $3);}
+	| musicAssignment TONE_DEF TONE							{$$ = MusicAssignmentToneDefinitionGrammarAction($1, $3);}
+	| musicAssignment RYTHM_DEF RYTHM						{$$ = MusicAssignmentRythmDefinitionGrammarAction($1, $3);}
+	| musicAssignment BPM expression						{$$ = MusicAssignmentBpmDefinitionGrammarAction($1, $3);}
 	| variableName RAISE_OCTAVE								{$$ = VariableRaiseOctaveTypeDefinitionGrammarAction($1);}
 	| variableName LOWER_TONE								{$$ = VariableLowerToneDefinitionGrammarAction($1);}
 	| variableName REMOVE expression						{$$ = VariableRemoveExpressionGrammarAction($1, $3);}

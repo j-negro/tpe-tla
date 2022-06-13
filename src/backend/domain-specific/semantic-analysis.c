@@ -1,4 +1,5 @@
 #include "semantic-analysis.h"
+#include "../support/logger.h"
 
 static Stack stack;
 
@@ -6,7 +7,7 @@ static boolean validate_music_type_definition(MusicTypeDefinition *ptr);
 static boolean validate_type_definition(TypeDefinition *ptr);
 static boolean validate_add_note(AddNote *ptr);
 static boolean validate_return_line(ReturnLine *ptr);
-static boolean validate_assignment(Assigment *ptr);
+static boolean validate_assignment(Assignment *ptr);
 static boolean validate_expression(Expression *expression, VariableType type);
 static boolean validate_constant(Constant *constant, VariableType type);
 static boolean validate_getter(Getter *ptr, VariableType type);
@@ -16,19 +17,22 @@ static boolean validate_while_statement(WhileStatement *ptr);
 static boolean validate_music_assignment(MusicAssignment *ptr, VariableType *saved_type);
 
 static boolean validate_variable_type(VariableName *name, VariableType type) {
+    LogDebug("validate_variable_type");
     VariableType variable_type = find_symbol_in_stack(&stack, name->name);
     if (variable_type == -1 || variable_type != type) {
+        LogDebug("validate_variable_type %s is not type %d", name->name, type);
         return false;
     }
     return true;
 }
 
 static boolean validate_sentence(Sentence *sentence) {
+    LogDebug("validate_sentence");
     switch (sentence->type) {
         case TYPE_DEFINITION_SENTENCE:
             return validate_type_definition((TypeDefinition *) sentence->sentence);
         case ASSIGNMENT_SENTENCE:
-            return validate_assignment((Assigment *) sentence->sentence);
+            return validate_assignment((Assignment *) sentence->sentence);
         case MUSIC_TYPE_DEFINITION_SENTENCE:
             return validate_music_type_definition((MusicTypeDefinition *) sentence->sentence);
         case MUSIC_ASSIGNMENT_SENTENCE:
@@ -47,24 +51,29 @@ static boolean validate_sentence(Sentence *sentence) {
 }
 
 static boolean validate_music_assignment(MusicAssignment *ptr, VariableType *saved_type) {
+    LogDebug("validate_music_assignment %d", saved_type);
     VariableType variable_type;
     switch (ptr->type) {
         case TYPE_DEFINITION_MUSIC_ASSIGNMENT:
-            if (!validate_type_definition((TypeDefinition *) ptr->variable)) {
+            LogDebug("TYPE_DEFINITION_MUSIC_ASSIGNMENT");
+            if (!validate_music_type_definition((MusicTypeDefinition *) ptr->variable)) {
                 return false;
             }
             variable_type = find_symbol_in_stack(&stack, ((TypeDefinition *) ptr->variable)->name->name);
             break;
         case VARIABLE_NAME_MUSIC_ASSIGNMENT:
+            LogDebug("VARIABLE_NAME_MUSIC_ASSIGNMENT");
             variable_type = find_symbol_in_stack(&stack, ((VariableName *) ptr->variable)->name);
             break;
         case ASSIGNMENT_MUSIC_ASSIGNMENT:
+            LogDebug("ASSIGNMENT_MUSIC_ASSIGNMENT");
+            LogDebug("music_assignment->variable: %d", ptr->variable);
             if (!validate_music_assignment((MusicAssignment *) ptr->variable, &variable_type)) {
                 return false;
             }
             break;
     }
-
+    LogDebug("validate_music_assignment: variable_type: %d", variable_type);
     if (variable_type != VAR_NOTE && variable_type != VAR_MELODY) return false;
 
     if (saved_type != NULL) {
@@ -78,16 +87,17 @@ static boolean validate_music_assignment(MusicAssignment *ptr, VariableType *sav
             return variable_type == VAR_NOTE;
         case BPM_ASSIGNMENT:
         case REMOVE_ASSIGNMENT:
-            return variable_type == VAR_MELODY && validate_expression(ptr->value.bpm, VAR_INT);
+            return variable_type == VAR_MELODY && validate_expression(ptr->value.expression, VAR_INT);
         case LOWER_TONE_ASSIGNMENT:
             return variable_type == VAR_MELODY;
         case ADD_ASSIGNMENT:
-            return variable_type == VAR_MELODY && validate_expression(ptr->value.bpm, VAR_INT)
+            return variable_type == VAR_MELODY && validate_expression(ptr->value.expression, VAR_INT)
                     && (validate_variable_type(ptr->variableRight, VAR_NOTE) || validate_variable_type(ptr->variableRight, VAR_MELODY));
     }
 }
 
 static boolean validate_while_statement(WhileStatement *ptr) {
+    LogDebug("validate_while_statement");
     push(&stack);
     boolean ret = validate_expression(ptr->expression, VAR_BOOL) && validate_block(ptr->block);
     pop(&stack);
@@ -95,6 +105,7 @@ static boolean validate_while_statement(WhileStatement *ptr) {
 }
 
 static boolean validate_if_statement(IfStatement *ptr) {
+    LogDebug("validate_if_statement");
     push(&stack);
     boolean ret;
     switch (ptr->type) {
@@ -111,7 +122,8 @@ static boolean validate_if_statement(IfStatement *ptr) {
     return ret;
 }
 
-static boolean validate_assignment(Assigment *ptr) {
+static boolean validate_assignment(Assignment *ptr) {
+    LogDebug("validate_assignment");
     VariableType variable_type;
     switch (ptr->type) {
         case TYPE_DEFINITION_ASSIGNMENT:
@@ -129,6 +141,7 @@ static boolean validate_assignment(Assigment *ptr) {
 }
 
 static boolean validate_expression(Expression *expression, VariableType type) {
+    LogDebug("validate_expression");
     switch (expression->type) {
         case PLUS_EXPRESSION:
         case SUB_EXPRESSION:
@@ -164,10 +177,11 @@ static boolean validate_expression(Expression *expression, VariableType type) {
 }
 
 static boolean validate_getter(Getter *ptr, VariableType type) {
+    LogDebug("validate_getter");
     switch (ptr->type) {
         case BPM_GETTER:
         case DURATION_GETTER:
-            return type == VAR_INT;
+            return type == VAR_INT && validate_variable_type(ptr->name, VAR_MELODY);
         case RYTHM_GETTER:
         case TONE_GETTER:
         default: // TODO: ver si los casos de arriba tienen sentido
@@ -176,6 +190,7 @@ static boolean validate_getter(Getter *ptr, VariableType type) {
 }
 
 static boolean validate_constant(Constant *constant, VariableType type) {
+    LogDebug("validate_constant %d %d", constant->type, type);
     switch (constant->type) {
         case INTEGER_CONSTANT:
             return type == VAR_INT;
@@ -183,12 +198,13 @@ static boolean validate_constant(Constant *constant, VariableType type) {
             return type == VAR_BOOL;
         case RYTHM_CONSTANT:
         case TONE_CONSTANT:
-        default:
+        default: // TODO: ver si los casos de arriba tienen sentido
             return false;
     }
 }
 
 static boolean validate_return_line(ReturnLine *ptr) {
+    LogDebug("validate_return_line");
     switch (ptr->type) {
         case VARIABLE_NAME_RETURN:
             return validate_variable_type((VariableName *) ptr->value, VAR_MELODY);
@@ -200,16 +216,18 @@ static boolean validate_return_line(ReturnLine *ptr) {
 }
 
 static boolean validate_add_note(AddNote *ptr) {
+    LogDebug("validate_add_note");
     if (!validate_variable_type(ptr->melody, VAR_MELODY)) {
         return false;
     }
-    if (!validate_variable_type(ptr->melody, VAR_NOTE)) {
+    if (!validate_variable_type(ptr->note, VAR_NOTE) && !validate_variable_type(ptr->note, VAR_MELODY)) {
         return false;
     }
     return true;
 }
 
 static boolean validate_type_definition(TypeDefinition *ptr) {
+    LogDebug("validate_type_definition");
     VariableType type;
     switch (ptr->type) {
         case BOOLEAN_DEFINITION:
@@ -223,6 +241,7 @@ static boolean validate_type_definition(TypeDefinition *ptr) {
 }
 
 static boolean validate_music_type_definition(MusicTypeDefinition *ptr) {
+    LogDebug("validate_music_type_definition, %d", ptr);
     VariableType type;
     switch (ptr->type) {
         case MELODY_DEFINITION:
@@ -236,16 +255,23 @@ static boolean validate_music_type_definition(MusicTypeDefinition *ptr) {
 }
 
 static boolean validate_block(Block *block) {
-    if (validate_sentence(block->sentence) == false) {
-        return false;
+    LogDebug("validate_block");
+    if (block->type == EMPTY_BLOCK) {
+        LogDebug("Found empty block");
+        return true;
     }
-    return validate_block(block->block);
+    return validate_sentence(block->sentence) && validate_block(block->block);
 }
 
 boolean validate_semantics(Program *program) {
+    LogDebug("Validating program");
     init_stack(&stack);
+    LogDebug("Stack initialized");
     push(&stack);
+    LogDebug("Table created");
     boolean ret = validate_block(program->block);
+    LogDebug("Finished validating program");
     pop(&stack);
+    LogDebug("Table destroyed");
     return ret;
 }

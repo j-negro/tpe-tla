@@ -72,32 +72,11 @@ extern int yyparse(void);
 
 typedef int token;
 
-typedef enum {
-	NORMAL,
-	FLAT,
-	SHARP
-} NoteType;
-
-typedef enum {
-    EMPTY_BLOCK,
-    FILLED_BLOCK
-} BlockType;
-
-typedef enum {
-	C,
-	D,
-	E,
-	F,
-	G,
-	A,
-	B
-} NoteName;
-
 // Emular tipo TONE.
 typedef struct {
-	int octave;
-	NoteName name;
-	NoteType type;
+	char octave;
+	char name;
+	char type;
 } tone;
 
 // Emular tipo RYTHM.
@@ -181,7 +160,7 @@ typedef struct {
 	void * variable;
 
 	Expression * expression;
-} Assigment;
+} Assignment;
 
 typedef enum {
 	TYPE_DEFINITION_MUSIC_ASSIGNMENT,
@@ -202,7 +181,7 @@ typedef enum {
 typedef union {
 	tone tone;
 	rythm rythm;
-	Expression * bpm;
+	Expression * expression;
 } MusicAssignmentValue;
 
 typedef struct {
@@ -213,7 +192,7 @@ typedef struct {
 
 	MusicAssignmentType musicAssignmentType;
 
-	// depende del valor que queres guardar dependiendo del type (tone, rythm, bpm)
+	// depende del valor que queres guardar dependiendo del type (tone, rythm, expression)
 	MusicAssignmentValue value;
 } MusicAssignment;
 
@@ -297,6 +276,11 @@ typedef struct {
 	// puede ser typeDefinition, musicTypeDefinition, assignment, musicAssignment, addNote, ifStatement, whileStatement, returnLine
 	void * sentence;
 } Sentence;
+
+typedef enum {
+    EMPTY_BLOCK,
+    FILLED_BLOCK
+} BlockType;
 
 struct Block {
 	Sentence * sentence;

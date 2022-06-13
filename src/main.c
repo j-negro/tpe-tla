@@ -3,6 +3,7 @@
 #include "backend/support/shared.h"
 #include "frontend/syntactic-analysis/bison-parser.h"
 #include <stdio.h>
+#include "backend/domain-specific/semantic-analysis.h"
 
 //Estado de la aplicación.
 CompilerState state;
@@ -25,11 +26,18 @@ const int main(const int argumentCount, const char ** arguments) {
 	switch (result) {
 		case 0:
 			if (state.succeed) {
-				LogInfo("La compilacion fue exitosa.");
-				Generator(state.result);
+				LogInfo("El analisis sintactico fue exitoso.");
+                if (validate_semantics(state.program)) {
+                    LogInfo("El analisis semantico fue exitoso.");
+                    LogInfo("La compilacion fue exitosa.");
+    				Generator(state.result);
+                } else {
+                    LogError("Se produjo un error en el analisis semantico.");
+                    return -1;
+                }
 			}
 			else {
-				LogError("Se produjo un error en la aplicacion.");
+				LogError("Se produjo un error en el analisis sintactico.");
 				return -1;
 			}
 			break;

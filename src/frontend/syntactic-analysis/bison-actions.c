@@ -81,7 +81,7 @@ Sentence*  SentenceTypeDefinitionGrammarAction(TypeDefinition* typeDefintion){
 	return sentence;
 }
 
-Sentence*  SentenceAssignmentGrammarAction(Assigment* assignment){
+Sentence*  SentenceAssignmentGrammarAction(Assignment* assignment){
     LogDebug("SentenceAssignmentGrammarAction");
 	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
 	sentence->type = ASSIGNMENT_SENTENCE;
@@ -224,20 +224,20 @@ MusicAssignment *MusicTypeRythmDefinitionGrammarAction(MusicTypeDefinition* musi
     return musicAssignment;
 }
 
-MusicAssignment *MusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, Expression * Bpm){
+MusicAssignment *MusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, Expression * bpm){
     LogDebug("MusicTypeDefinitionGrammarAction");
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
     musicAssignment->type = TYPE_DEFINITION_MUSIC_ASSIGNMENT;
     musicAssignment->musicAssignmentType = BPM_ASSIGNMENT;
     musicAssignment->variable = musicTypeDefinition;
-    musicAssignment->value.bpm = Bpm;
+    musicAssignment->value.expression = bpm;
     return musicAssignment;
 }
 
 MusicAssignment *VariableToneTypeDefinitionGrammarAction(VariableName* variableName, tone tone){
     LogDebug("VariableToneTypeDefinitionGrammarAction");
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
-    musicAssignment->type = (MusicAssignmentVariableType) VARIABLE_NAME_ASSIGNMENT;
+    musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
     musicAssignment->musicAssignmentType = TONE_ASSIGNMENT;
     musicAssignment->variable = variableName;
     musicAssignment->value.tone = tone;
@@ -260,66 +260,66 @@ MusicAssignment* VariableBpmTypeDefinitionGrammarAction(VariableName* variableNa
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
     musicAssignment->musicAssignmentType = BPM_ASSIGNMENT;
     musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
-    musicAssignment->value.bpm = bpm;
+    musicAssignment->value.expression = bpm;
     musicAssignment->variable = variableName;
 
-	return 0;
+	return musicAssignment;
 }
 
-MusicAssignment* MusicAssigmentToneDefinitionGrammarAction(MusicAssignment* ms, tone tone) {
-    LogDebug("MusicAssigmentToneDefinitionGrammarAction");
+MusicAssignment* MusicAssignmentToneDefinitionGrammarAction(MusicAssignment* ma, tone tone) {
+    LogDebug("MusicAssignmentToneDefinitionGrammarAction");
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
 	musicAssignment->musicAssignmentType = TONE_ASSIGNMENT;
     musicAssignment->type = ASSIGNMENT_MUSIC_ASSIGNMENT;
+    musicAssignment->variable = ma;
     musicAssignment->value.tone = tone;
 
 	return musicAssignment;
 }
 
-MusicAssignment* MusicAssigmentRythmDefinitionGrammarAction(MusicAssignment* ms, rythm rythm) {
-    LogDebug("MusicAssigmentRythmDefinitionGrammarAction");
+MusicAssignment* MusicAssignmentRythmDefinitionGrammarAction(MusicAssignment* ma, rythm rythm) {
+    LogDebug("MusicAssignmentRythmDefinitionGrammarAction");
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
     musicAssignment->type = ASSIGNMENT_MUSIC_ASSIGNMENT;
     musicAssignment->musicAssignmentType = RYTHM_ASSIGNMENT;
+    musicAssignment->variable = ma;
     musicAssignment->value.rythm = rythm;
 
 	return musicAssignment;
 }
 
-MusicAssignment* MusicAssigmentBpmDefinitionGrammarAction(MusicAssignment* musicAsignment,Expression* bpm){
-    LogDebug("MusicAssigmentBpmDefinitionGrammarAction");
-	//LogDebug("MusicAssigmentBpmDefinitionGrammarAction(%d)", value);
+MusicAssignment* MusicAssignmentBpmDefinitionGrammarAction(MusicAssignment* ma,Expression* bpm){
+    LogDebug("MusicAssignmentBpmDefinitionGrammarAction");
 	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
-	MusicAssignmentValue value;
-	value.bpm = bpm;
 	musicAssignment->musicAssignmentType = BPM_ASSIGNMENT;
 	musicAssignment->type = ASSIGNMENT_MUSIC_ASSIGNMENT;
-	musicAssignment->variable = musicAsignment;
-	musicAssignment->value = value;
+	musicAssignment->variable = ma;
+	musicAssignment->value.expression = bpm;
 	return musicAssignment;
 }
 
-Assigment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightvalue){
+Assignment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightvalue){
     LogDebug("typeDefinitionAssignmentGrammarAction");
-	Assigment * assigment =(Assigment*) malloc(sizeof(Assigment));
-	assigment->expression = rightvalue;
-	assigment->variable = leftValue;
-	assigment->type = TYPE_DEFINITION_ASSIGNMENT;
-	return assigment;
+	Assignment * assignment =(Assignment*) malloc(sizeof(Assignment));
+	assignment->expression = rightvalue;
+	assignment->variable = leftValue;
+	assignment->type = TYPE_DEFINITION_ASSIGNMENT;
+	return assignment;
 }
 
-Assigment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue){
+Assignment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue){
     LogDebug("variableNameAssignmentGrammarAction");
-	Assigment * assigment =(Assigment*) malloc(sizeof(Assigment));
-	assigment->expression = rightValue;
-	assigment->variable = leftValue;
-	assigment->type = VARIABLE_NAME_ASSIGNMENT;
-	return assigment;
+	Assignment * assignment =(Assignment*) malloc(sizeof(Assignment));
+	assignment->expression = rightValue;
+	assignment->variable = leftValue;
+	assignment->type = VARIABLE_NAME_ASSIGNMENT;
+	return assignment;
 }
 
 MusicAssignment* VariableRaiseOctaveTypeDefinitionGrammarAction(VariableName* variableName){
     LogDebug("VariableRaiseOctaveTypeDefinitionGrammarAction");
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
+    musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
     musicAssignment->musicAssignmentType = RAISE_OCTAVE_ASSIGNMENT;
     musicAssignment->variable = variableName;
     return musicAssignment;
@@ -328,9 +328,9 @@ MusicAssignment* VariableRemoveExpressionGrammarAction(VariableName* variableNam
     LogDebug("VariableRemoveExpressionGrammarAction");
 	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
 	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
-	musicAssignment->type = (MusicAssignmentVariableType) VARIABLE_NAME_ASSIGNMENT;
+	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
 	musicAssignment->variable = variableName;
-	musicAssignment->value.bpm = expression;
+	musicAssignment->value.expression = expression;
 	return musicAssignment;
 }
 
@@ -338,7 +338,7 @@ MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variable
     LogDebug("VariableLowerToneDefinitionGrammarAction");
 	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
 	musicAssignment->musicAssignmentType = LOWER_TONE_ASSIGNMENT;
-	musicAssignment->type = (MusicAssignmentVariableType) VARIABLE_NAME_ASSIGNMENT;
+	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
 	musicAssignment->variable = variableName;
 	return musicAssignment;
 }
@@ -350,7 +350,7 @@ MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* vari
 	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
 	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
 	musicAssignment->variable = variableName;
-	musicAssignment->value.bpm = expression;
+	musicAssignment->value.expression = expression;
 	return musicAssignment;
 }
 
@@ -361,7 +361,9 @@ MusicAssignment* VariableAdditionTypeDefinitionGrammarAction(VariableName* left,
     musicAssignment->musicAssignmentType = ADD_ASSIGNMENT;
     musicAssignment->variable = left;
     musicAssignment->variableRight = right;
-    musicAssignment->value.bpm = expression;
+    musicAssignment->value.expression = expression;
+
+    return musicAssignment;
 }
 //--------------------------------------------Comparison---------------------------------------------------
 
@@ -444,7 +446,7 @@ Expression* VariableNameExpressionGrammarAction(VariableName* variableName){
 TypeDefinition * BooleanTypeDefinitionGrammarAction(VariableName * variableName) {
     LogDebug("BooleanTypeDefinitionGrammarAction");
 	TypeDefinition * typeDef = malloc(sizeof(TypeDefinition));
-	typeDef->type = INTEGER_DEFINITION;
+	typeDef->type = BOOLEAN_DEFINITION;
 	typeDef->name = variableName;
 	return typeDef;
 }
@@ -452,7 +454,7 @@ TypeDefinition * BooleanTypeDefinitionGrammarAction(VariableName * variableName)
 TypeDefinition * IntegerTypeDefinitionGrammarAction(VariableName * variableName) {
     LogDebug("IntegerTypeDefinitionGrammarAction");
 	TypeDefinition * typeDef = malloc(sizeof(TypeDefinition));
-	typeDef->type = BOOLEAN_DEFINITION;
+	typeDef->type = INTEGER_DEFINITION;
 	typeDef->name = variableName;
 	return typeDef;
 }
@@ -544,9 +546,9 @@ ReturnLine* ReturnMusicTypeDefinitionGrammarAction(MusicTypeDefinition *musicTyp
 //-------------------------------------------BlockType--------------------------------------------
 
 Block * BlockSentenceGrammarAction(Sentence *sentence, Block *otherBlock) {
-    LogDebug("BlockSentenceGrammarAction");
+    LogDebug("BlockSentenceGrammarAction %s", otherBlock->type == EMPTY_BLOCK ? "EMPTY_BLOCK" : "FILLED_BLOCK");
     Block* block = (Block*) malloc(sizeof(Block));
-    block->block = block;
+    block->block = otherBlock;
     block->sentence = sentence;
     block->type = FILLED_BLOCK;
 

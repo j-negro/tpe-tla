@@ -23,7 +23,7 @@ Expression* ConstantExpressionGrammarAction(Constant * constant);
 
 //Sentences
 Sentence*  SentenceTypeDefinitionGrammarAction(TypeDefinition* typeDefintion);
-Sentence*  SentenceAssignmentGrammarAction(Assigment* assignment);
+Sentence*  SentenceAssignmentGrammarAction(Assignment* assignment);
 Sentence*  SentenceMusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition);
 Sentence*  SentenceMusicAssignmentDefinitionGrammarAction(MusicAssignment* musicAssignment);
 Sentence*  SentenceAddNoteGrammarAction(AddNote* addNote);
@@ -55,13 +55,13 @@ Expression* VariableNameExpressionGrammarAction(VariableName* variableName);
 //Assignments
 MusicAssignment* MusicTypeToneDefinitionGrammarAction(MusicTypeDefinition* value, tone Tone);
 MusicAssignment *MusicTypeRythmDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, rythm Rythm);
-MusicAssignment *MusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, Expression * Bpm);
+MusicAssignment *MusicTypeDefinitionGrammarAction(MusicTypeDefinition* musicTypeDefinition, Expression * bpm);
 MusicAssignment *VariableToneTypeDefinitionGrammarAction(VariableName* variableName, tone tone);
 MusicAssignment * VariableRythmTypeDefinitionGrammarAction(VariableName * variableName, rythm rythm);
 MusicAssignment* VariableBpmTypeDefinitionGrammarAction(VariableName* variableName, Expression* expression);
-MusicAssignment* MusicAssigmentToneDefinitionGrammarAction(MusicAssignment* ms, tone tone);
-MusicAssignment* MusicAssigmentRythmDefinitionGrammarAction(MusicAssignment* ms, rythm rythm);
-MusicAssignment* MusicAssigmentBpmDefinitionGrammarAction(MusicAssignment* leftValue,Expression* rightValue);
+MusicAssignment* MusicAssignmentToneDefinitionGrammarAction(MusicAssignment* ms, tone tone);
+MusicAssignment* MusicAssignmentRythmDefinitionGrammarAction(MusicAssignment* ms, rythm rythm);
+MusicAssignment* MusicAssignmentBpmDefinitionGrammarAction(MusicAssignment* leftValue,Expression* rightValue);
 MusicAssignment* VariableRaiseOctaveTypeDefinitionGrammarAction(VariableName* variableName);
 MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variableName);
 MusicAssignment* VariableRemoveExpressionGrammarAction(VariableName* variableName, Expression* expression);
@@ -69,8 +69,8 @@ MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* vari
 MusicAssignment* VariableAdditionTypeDefinitionGrammarAction(VariableName* left, VariableName* right, Expression* expression);
 
 
-Assigment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightValue);
-Assigment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue);
+Assignment* typeDefinitionAssignmentGrammarAction(TypeDefinition* leftValue, Expression* rightValue);
+Assignment* variableNameAssignmentGrammarAction(VariableName* leftValue, Expression* rightValue);
 
 // TypeDefinitions
 TypeDefinition * BooleanTypeDefinitionGrammarAction(VariableName * variableName);

@@ -6,7 +6,7 @@ while (i < 4) {
     melodia add nota;
 }
 
-int i = 0;
+i = 0;
 while (i < 4) {
     if (i < 2) {
         melodia remove i;

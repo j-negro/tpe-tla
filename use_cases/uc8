@@ -1,9 +1,9 @@
 int i = 0;
-melody melodia BPM 180;
+melody melodia_A BPM 180;
 
 while (i < 4) {
     note nota TONE A#5 RYTHM half;
-    melodia add nota;
+    melodia_A add nota;
     i = i+1;
 }
 
