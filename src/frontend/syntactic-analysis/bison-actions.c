@@ -343,17 +343,6 @@ MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variable
 	return musicAssignment;
 }
 
-MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* expression) {
-    LogDebug("VariableRemoveIntegerDefinitionGrammarAction");
-	//LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
-	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
-	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
-	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
-	musicAssignment->variable = variableName;
-	musicAssignment->value.expression = expression;
-	return musicAssignment;
-}
-
 MusicAssignment* VariableAdditionTypeDefinitionGrammarAction(VariableName* left, VariableName* right, Expression* expression) {
     LogDebug("VariableAdditionTypeDefinitionGrammarAction");
     MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
