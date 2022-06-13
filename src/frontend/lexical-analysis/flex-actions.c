@@ -28,9 +28,10 @@ token TonePatternAction(const char * lexeme) {
 	LogDebug("TonePatternAction: '%s'.", lexeme);
 	int index = 0;
 	yylval.tone.name = lexeme[index++];
-	if (lexeme[index] == '#' || lexeme[index] == 'b') {
-		yylval.tone.type = lexeme[index++];
-	}
+    if (lexeme[index] == '#' || lexeme[index] == 'b')
+        yylval.tone.type = lexeme[index++];
+    else
+        yylval.tone.type = '0';
 	yylval.tone.octave = lexeme[index];
 	return TONE;
 }
