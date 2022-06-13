@@ -23,6 +23,8 @@ Program *ProgramGrammarAction(Block* value) {
 	LogDebug("ProgramGrammarAction(%d)", value);
 	Program * program = (Program*) malloc(sizeof(Program));
     program->block =value;
+    state.succeed = true;
+    state.program = program;
 	return program;
 }
 
