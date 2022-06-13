@@ -34,8 +34,23 @@ public class Note implements Comparable<Note> {
         return this;
     }
 
+    public Note setTone(char tone) {
+        this.tone = NoteTone.valueOf(String.valueOf(tone));
+        return this;
+    }
+
     public Note setType(NoteType type) {
         this.type = type;
+        return this;
+    }
+
+    public Note setType(char type) {
+        if(type == '#')
+            this.type = NoteType.SHARP;
+        else if(type == 'b')
+            this.type = NoteType.FLAT;
+        else
+            this.type = NoteType.NORMAL;
         return this;
     }
 
@@ -44,11 +59,21 @@ public class Note implements Comparable<Note> {
         return this;
     }
 
+    public Note setRythm(int rythm) {
+        this.rythm = NoteRythm.values()[rythm];
+        return this;
+    }
+
     public Note setOctave(int octave) {
         // TODO: En informe pusimos 1-7, pero en Flex tomamos 2-6.
         if (octave < 2)
             this.octave = 2;
         else this.octave = Math.min(octave, 6);
+        return this;
+    }
+
+    public Note setOctave(char octave) {
+        setOctave(Character.getNumericValue(octave));
         return this;
     }
 
@@ -65,6 +90,16 @@ public class Note implements Comparable<Note> {
 
     public Note lowerOctave() {
         return this.setOctave(this.octave - 1);
+    }
+
+    public Note raiseTone() {
+        this.setTone(NoteTone.values()[(this.tone.ordinal() + 1) % NoteTone.values().length]);
+        return this;
+    }
+
+    public Note lowerTone() {
+        this.setTone(NoteTone.values()[(this.tone.ordinal() - 1 + NoteTone.values().length) % NoteTone.values().length]);
+        return this;
     }
 
     @Override
@@ -84,6 +119,7 @@ public class Note implements Comparable<Note> {
         else if (this.type == NoteType.SHARP)
             sb.append("#");
         sb.append(this.octave);
+        sb.append(this.rythm.getSymbol());
         return sb.toString();
     }
 }

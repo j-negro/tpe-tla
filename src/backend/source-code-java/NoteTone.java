@@ -5,5 +5,5 @@ public enum NoteTone {
     D,
     E,
     F,
-    G;
+    G
 }

@@ -11,6 +11,10 @@ public class Melody {
         this.notes = new ArrayList<>();
     }
 
+    public int getBpm() {
+        return this.bpm;
+    }
+
     public Melody setBpm(int bpm) {
         this.bpm = bpm;
         return this;
@@ -20,8 +24,36 @@ public class Melody {
         this.notes.add(note);
     }
 
+    public void addNote(Note note, int i) {
+        this.notes.add(i, note);
+    }
+
     public boolean removeNote(Note note) {
         return this.notes.remove(note);
+    }
+
+    public void removeNote(int index) {
+        this.notes.remove(index);
+    }
+
+    public Melody split(int index) {
+        Melody melody = new Melody();
+        melody.setBpm(this.bpm);
+        for (int i = index; i < this.notes.size(); i++) {
+            melody.addNote(this.notes.get(i));
+        }
+        this.notes.removeAll(melody.notes);
+        return melody;
+    }
+
+    public void raiseTone() {
+        for (Note note : this.notes)
+            note.raiseTone();
+    }
+
+    public void lowerTone() {
+        for (Note note : this.notes)
+            note.lowerTone();
     }
 
     public int getDuration() {
@@ -31,8 +63,14 @@ public class Melody {
         return (int) Math.ceil(duration);
     }
 
+    public int getSize() {
+        return this.notes.size();
+    }
+
     @Override
     public String toString() {
+        if (this.bpm == 0)
+            return "";
         StringBuilder sb = new StringBuilder();
         sb.append("T").append(this.bpm).append(" ");
         for (Note note : this.notes)
