@@ -32,11 +32,19 @@ typedef struct Table {
     Symbol symbols[MAX_TABLE];
 } Table;
 
+typedef struct Stack {
+    Table *array[MAX_TABLE];
+    int current;
+    int itemCount;
+} Stack;
+
+void init_stack(Stack *stack);
+Table *peek(Stack *stack);
+boolean push(Stack *stack);
+boolean pop(Stack *stack);
 void init_table(Table *table);
-
 boolean add_symbol(Table *table, char *name, VariableType type);
-
-VariableType find_symbol(Table *table, char *name);
+VariableType find_symbol_in_stack(Stack *stack, char *name);
 
 // Descriptor del archivo de entrada que utiliza Bison.
 extern FILE * yyin;

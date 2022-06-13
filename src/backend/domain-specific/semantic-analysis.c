@@ -1,7 +1,6 @@
 #include "semantic-analysis.h"
-#include "../support/shared.h"
 
-static Table table;
+static Stack stack;
 
 static boolean validate_music_type_definition(MusicTypeDefinition *ptr);
 static boolean validate_type_definition(TypeDefinition *ptr);
@@ -17,7 +16,7 @@ static boolean validate_while_statement(WhileStatement *ptr);
 static boolean validate_music_assignment(MusicAssignment *ptr, VariableType *saved_type);
 
 static boolean validate_variable_type(VariableName *name, VariableType type) {
-    VariableType variable_type = find_symbol(&table, name->name);
+    VariableType variable_type = find_symbol_in_stack(&stack, name->name);
     if (variable_type == -1 || variable_type != type) {
         return false;
     }
@@ -54,10 +53,10 @@ static boolean validate_music_assignment(MusicAssignment *ptr, VariableType *sav
             if (!validate_type_definition((TypeDefinition *) ptr->variable)) {
                 return false;
             }
-            variable_type = find_symbol(&table, ((TypeDefinition *) ptr->variable)->name->name);
+            variable_type = find_symbol_in_stack(&stack, ((TypeDefinition *) ptr->variable)->name->name);
             break;
         case VARIABLE_NAME_MUSIC_ASSIGNMENT:
-            variable_type = find_symbol(&table, ((VariableName *) ptr->variable)->name);
+            variable_type = find_symbol_in_stack(&stack, ((VariableName *) ptr->variable)->name);
             break;
         case ASSIGNMENT_MUSIC_ASSIGNMENT:
             if (!validate_music_assignment((MusicAssignment *) ptr->variable, &variable_type)) {
@@ -89,18 +88,27 @@ static boolean validate_music_assignment(MusicAssignment *ptr, VariableType *sav
 }
 
 static boolean validate_while_statement(WhileStatement *ptr) {
-    return validate_expression(ptr->expression, VAR_BOOL) && validate_block(ptr->block);
+    push(&stack);
+    boolean ret = validate_expression(ptr->expression, VAR_BOOL) && validate_block(ptr->block);
+    pop(&stack);
+    return ret;
 }
 
 static boolean validate_if_statement(IfStatement *ptr) {
+    push(&stack);
+    boolean ret;
     switch (ptr->type) {
         case IF_TYPE:
-            return validate_expression((Expression *) ptr->expression, VAR_BOOL) && validate_block(ptr->block);
+            ret = validate_expression((Expression *) ptr->expression, VAR_BOOL) && validate_block(ptr->block);
+            break;
         case IF_ELSE_TYPE:
-            return validate_if_statement((IfStatement *) ptr->expression) && validate_block(ptr->block);
+            ret = validate_if_statement((IfStatement *) ptr->expression) && validate_block(ptr->block);
+            break;
         default:
-            return false;
+            ret = false;
     }
+    pop(&stack);
+    return ret;
 }
 
 static boolean validate_assignment(Assigment *ptr) {
@@ -108,12 +116,12 @@ static boolean validate_assignment(Assigment *ptr) {
     switch (ptr->type) {
         case TYPE_DEFINITION_ASSIGNMENT:
             if (validate_type_definition((TypeDefinition *) ptr->variable)) {
-                variable_type = find_symbol(&table, ((TypeDefinition *) ptr->variable)->name->name);
+                variable_type = find_symbol_in_stack(&stack, ((TypeDefinition *) ptr->variable)->name->name);
                 return validate_expression((Expression *) ptr->expression, variable_type);
             }
             return false;
         case VARIABLE_NAME_ASSIGNMENT:
-            variable_type = find_symbol(&table, ((VariableName *) ptr->variable)->name);
+            variable_type = find_symbol_in_stack(&stack, ((VariableName *) ptr->variable)->name);
             return validate_expression((Expression *) ptr->expression, variable_type);
         default:
             return false;
@@ -211,7 +219,7 @@ static boolean validate_type_definition(TypeDefinition *ptr) {
             type = VAR_INT;
             break;
     }
-    return add_symbol(&table, ptr->name->name, type);
+    return add_symbol(peek(&stack), ptr->name->name, type);
 }
 
 static boolean validate_music_type_definition(MusicTypeDefinition *ptr) {
@@ -224,7 +232,7 @@ static boolean validate_music_type_definition(MusicTypeDefinition *ptr) {
             type = VAR_NOTE;
             break;
     }
-    return add_symbol(&table, ptr->name->name, type);
+    return add_symbol(peek(&stack), ptr->name->name, type);
 }
 
 static boolean validate_block(Block *block) {
@@ -235,6 +243,9 @@ static boolean validate_block(Block *block) {
 }
 
 boolean validate_semantics(Program *program) {
-    init_table(&table);
-    return validate_block(program->block);
+    init_stack(&stack);
+    push(&stack);
+    boolean ret = validate_block(program->block);
+    pop(&stack);
+    return ret;
 }
