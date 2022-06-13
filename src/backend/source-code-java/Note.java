@@ -1,14 +1,14 @@
 public class Note implements Comparable<Note> {
 
     private NoteTone tone;
-    private NoteDuration duration;
+    private NoteRythm rythm;
     private NoteType type;
     private int octave;
 
     public Note() {
         // A4 Half es valor por defecto por si no se aclaran atributos.
         this.tone = NoteTone.A;
-        this.duration = NoteDuration.HALF;
+        this.rythm = NoteRythm.HALF;
         this.type = NoteType.NORMAL;
         this.octave = 4;
     }
@@ -21,8 +21,8 @@ public class Note implements Comparable<Note> {
         return type;
     }
 
-    public NoteDuration getDuration() {
-        return duration;
+    public NoteRythm getRythm() {
+        return rythm;
     }
 
     public int getOctave() {
@@ -39,15 +39,16 @@ public class Note implements Comparable<Note> {
         return this;
     }
 
-    public Note setDuration(NoteDuration duration) {
-        this.duration = duration;
+    public Note setRythm(NoteRythm rythm) {
+        this.rythm = rythm;
         return this;
     }
 
     public Note setOctave(int octave) {
-        if (octave < 1)
-            this.octave = 1;
-        else this.octave = Math.min(octave, 7); // Habíamos definido A1-G7 como los máximos
+        // TODO: En informe pusimos 1-7, pero en Flex tomamos 2-6.
+        if (octave < 2)
+            this.octave = 2;
+        else this.octave = Math.min(octave, 6);
         return this;
     }
 
@@ -55,7 +56,7 @@ public class Note implements Comparable<Note> {
         // TODO: La habíamos hecho en el informe pero no aparece en UC. Por las dudas la hago
         NoteTone newTone = NoteTone.values()[(this.tone.ordinal() + value) % NoteTone.values().length];
         int newOctave = this.octave + (value / NoteTone.values().length);
-        return new Note().setDuration(this.duration).setTone(newTone).setOctave(newOctave).setType(this.type);
+        return new Note().setRythm(this.rythm).setTone(newTone).setOctave(newOctave).setType(this.type);
     }
 
     public Note raiseOctave() {
@@ -72,5 +73,17 @@ public class Note implements Comparable<Note> {
         if (result == 0)
             result = this.tone.ordinal() - o.tone.ordinal();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.tone.name());
+        if (this.type == NoteType.FLAT)
+            sb.append("b");
+        else if (this.type == NoteType.SHARP)
+            sb.append("#");
+        sb.append(this.octave);
+        return sb.toString();
     }
 }

@@ -1,4 +1,4 @@
-public enum NoteDuration {
+public enum NoteRythm {
     WHOLE(1),
     HALF(0.5),
     QUARTER(0.25),
@@ -8,7 +8,7 @@ public enum NoteDuration {
     SIXTY_FOURTH(0.015625);
     private final double duration;
 
-    NoteDuration(double duration) {
+    NoteRythm(double duration) {
         this.duration = duration;
     }
 
