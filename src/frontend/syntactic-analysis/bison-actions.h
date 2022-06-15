@@ -107,4 +107,10 @@ Block * BlockSentenceGrammarAction(Sentence *sentence, Block *block);
 VariableName * VariableNameGrammarAction(char * variable);
 
 Block* EmptyBlockSentenceGrammarAction();
+
+Sentence* SentencePrintGrammarAction(Print *print);
+Sentence* SentenceCommentGrammarAction();
+
+Print* PrintGrammarAction(char c, Print* print);
+Print* PrintEmptyGrammarAction();
 #endif

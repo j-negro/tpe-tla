@@ -70,6 +70,8 @@ extern int yylex(void);
 // Función global del analizador sintáctico Bison.
 extern int yyparse(void);
 
+extern int yyleng;
+
 typedef int token;
 
 // Emular tipo TONE.
@@ -259,6 +261,11 @@ typedef struct {
 	void * value;
 } ReturnLine;
 
+typedef struct Print {
+	char current;
+	struct Print *next;
+} Print;
+
 typedef enum {
 	TYPE_DEFINITION_SENTENCE,
 	ASSIGNMENT_SENTENCE,
@@ -267,7 +274,9 @@ typedef enum {
 	ADD_NOTE_SENTENCE,
 	IF_STATEMENT_SENTENCE,
 	WHILE_STATEMENT_SENTENCEM,
-	RETURN_LINE_SENTENCE
+	RETURN_LINE_SENTENCE,
+    PRINT_SENTENCE,
+    COMMENT_SENTENCE,
 } SentenceType;
 
 typedef struct {

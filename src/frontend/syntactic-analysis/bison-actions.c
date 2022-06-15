@@ -139,7 +139,6 @@ Sentence*  SentenceReturnLineGrammarAction(ReturnLine* returnLine){
 //--------------------------------------------Statements------------------------------------------------------------
 IfStatement *ifStatementGrammarAction(Expression * expression, Block* block){
     LogDebug("ifStatementGrammarAction");
-	//LogDebug("IfStatementGrammarAction(%d, %d)", leftValue, rightValue);
     IfStatement * ifStatement = (IfStatement*) malloc(sizeof (IfStatement));
     ifStatement->expression = expression;
     ifStatement->block = block;
@@ -345,7 +344,6 @@ MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variable
 
 MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* expression) {
     LogDebug("VariableRemoveIntegerDefinitionGrammarAction");
-	//LogDebug("VariableRemoveIntegerDefinitionGrammarAction(%d)", value);
 	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
 	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
 	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
@@ -369,7 +367,6 @@ MusicAssignment* VariableAdditionTypeDefinitionGrammarAction(VariableName* left,
 
 Expression* ExpressionEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
     LogDebug("ExpressionEqualComparisonGrammarAction");
-	//LogDebug("CalculationEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
 	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
 	toReturn->expression1 = leftValue;
 	toReturn->expression2 = rightValue;
@@ -379,7 +376,6 @@ Expression* ExpressionEqualComparisonGrammarAction(Expression* leftValue, Expres
 
 Expression* ExpressionNotEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
     LogDebug("ExpressionNotEqualComparisonGrammarAction");
-	//LogDebug("CalculationNotEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
 	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
 	toReturn->expression1 = leftValue;
 	toReturn->expression2 = rightValue;
@@ -389,7 +385,6 @@ Expression* ExpressionNotEqualComparisonGrammarAction(Expression* leftValue, Exp
 
 Expression* ExpressionLowerComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
     LogDebug("ExpressionLowerComparisonGrammarAction");
-	//LogDebug("CalculationLowerComparisonGrammarAction(%d,%d)",leftValue,rightValue);
 	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
 	toReturn->expression1 = leftValue;
 	toReturn->expression2 = rightValue;
@@ -399,7 +394,6 @@ Expression* ExpressionLowerComparisonGrammarAction(Expression* leftValue, Expres
 
 Expression* ExpressionGreaterComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
     LogDebug("ExpressionGreaterComparisonGrammarAction");
-	//LogDebug("CalculationGreaterComparisonGrammarAction(%d,%d)",leftValue,rightValue);
 	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
 	toReturn->expression1 = leftValue;
 	toReturn->expression2 = rightValue;
@@ -409,7 +403,6 @@ Expression* ExpressionGreaterComparisonGrammarAction(Expression* leftValue, Expr
 
 Expression* ExpressionGreaterEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
     LogDebug("ExpressionGreaterEqualComparisonGrammarAction");
-	//LogDebug("CalculationGreaterEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
 	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
 	toReturn->expression1 = leftValue;
 	toReturn->expression2 = rightValue;
@@ -419,7 +412,6 @@ Expression* ExpressionGreaterEqualComparisonGrammarAction(Expression* leftValue,
 
 Expression* ExpressionLowerEqualComparisonGrammarAction(Expression* leftValue, Expression* rightValue){
     LogDebug("ExpressionLowerEqualComparisonGrammarAction");
-	//LogDebug("CalculationLowerEqualComparisonGrammarAction(%d,%d)",leftValue,rightValue);
 	Expression* toReturn = (Expression*) malloc(sizeof(Expression));
 	toReturn->expression1 = leftValue;
 	toReturn->expression2 = rightValue;
@@ -601,4 +593,36 @@ Block* EmptyBlockSentenceGrammarAction(){
     Block * block = malloc(sizeof(Block));
     block->type = EMPTY_BLOCK;
     return block;
+}
+
+Sentence* SentencePrintGrammarAction(Print *print) {
+    LogDebug("SentencePrintGrammarAction");
+    Sentence * sentence = malloc(sizeof(Sentence));
+    sentence->type = PRINT_SENTENCE;
+    sentence->sentence = print;
+    return sentence;
+}
+
+Sentence* SentenceCommentGrammarAction() {
+    LogDebug("SentenceCommentGrammarAction");
+    Sentence * sentence = malloc(sizeof(Sentence));
+    sentence->type = COMMENT_SENTENCE;
+    sentence->sentence = NULL;
+    return sentence;
+}
+
+Print* PrintGrammarAction(char c, Print* print) {
+    LogDebug("PrintGrammarAction");
+    Print *ret = malloc(sizeof(Print));
+    print->current = c;
+    print->next = print;
+    return ret;
+}
+
+Print* PrintEmptyGrammarAction() {
+    LogDebug("PrintEmptyGrammarAction");
+    Print *ret = malloc(sizeof(Print));
+    ret->current = '\0';
+    ret->next = NULL;
+    return ret;
 }

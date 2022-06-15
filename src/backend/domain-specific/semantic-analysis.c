@@ -45,6 +45,9 @@ static boolean validate_sentence(Sentence *sentence) {
             return validate_while_statement((WhileStatement *) sentence->sentence);
         case RETURN_LINE_SENTENCE:
             return validate_return_line((ReturnLine *) sentence->sentence);
+        case PRINT_SENTENCE:
+        case COMMENT_SENTENCE:
+            return true;
         default:
             return false;
     }

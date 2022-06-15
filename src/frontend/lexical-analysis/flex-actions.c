@@ -23,7 +23,6 @@ token BooleanPatternAction(const char * lexeme) {
 	return BOOLEAN;
 }
 
-
 token TonePatternAction(const char * lexeme) {
 	LogDebug("TonePatternAction: '%s'.", lexeme);
 	int index = 0;
@@ -61,7 +60,31 @@ token RythmPatternAction(const char * lexeme) {
 }
 
 void IgnoredPatternAction(const char * lexeme) {
-	// LogDebug("IgnoredPatternAction: '%s'.", lexeme);
+	LogDebug("IgnoredPatternAction: '%s'.", lexeme);
+}
+
+void IgnoredCommentPatternAction(const char * lexeme) {
+	LogDebug("IgnoredCommentPatternAction: '%s'.", lexeme);
+}
+
+token StartComment() {
+	LogDebug("Start_Comment");
+	return START_COMMENT;
+}
+
+token EndComment() {
+	LogDebug("End_Comment");
+	return END_COMMENT;
+}
+
+token StartString() {
+	LogDebug("Start_String");
+	return START_STRING;
+}
+
+token EndString() {
+	LogDebug("End_String");
+	return END_STRING;
 }
 
 token UnknownPatternAction(const char * lexeme) {
@@ -71,8 +94,9 @@ token UnknownPatternAction(const char * lexeme) {
 
 token VariablePatternAction(char * lexeme) {
 	LogDebug("VariablePatternAction: '%s'.", lexeme);
-    char * toRet = (char*) malloc(strlen(lexeme));
-    strcpy(toRet, lexeme);
+    char * toRet = (char*) malloc((yyleng + 1)*sizeof(char));
+    strncpy(toRet, lexeme, yyleng);
+	toRet[yyleng] = '\0';
 	yylval.string = toRet;
 	return VARIABLE;
 }
@@ -93,4 +117,10 @@ token MulOperatorPatternAction(const char * lexeme){
 	LogDebug("MulOperatorPatternAction: '%s'.", lexeme);
 	yylval.token = MUL;
 	return MUL;
+}
+
+token CharPatternAction(const char * lexeme) {
+	LogDebug("CharPatternAction: '%s'.", lexeme);
+	yylval.c = *lexeme;
+	return CHAR;
 }
