@@ -30,7 +30,7 @@ const int main(const int argumentCount, const char ** arguments) {
                 if (validate_semantics(state.program)) {
                     LogInfo("El analisis semantico fue exitoso.");
                     LogInfo("La compilacion fue exitosa.");
-    				Generator(state.result);
+    				Generator(state.program);
                 } else {
                     LogError("Se produjo un error en el analisis semantico.");
                     return -1;

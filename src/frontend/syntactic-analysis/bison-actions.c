@@ -77,7 +77,7 @@ Sentence*  SentenceTypeDefinitionGrammarAction(TypeDefinition* typeDefintion){
     LogDebug("SentenceTypeDefinitionGrammarAction");
 	Sentence* sentence = (Sentence*) malloc(sizeof(Sentence));
 	sentence->type = TYPE_DEFINITION_SENTENCE;
-	sentence->sentence =typeDefintion;
+	sentence->sentence = typeDefintion;
 	return sentence;
 }
 
@@ -339,16 +339,6 @@ MusicAssignment* VariableLowerToneDefinitionGrammarAction(VariableName* variable
 	musicAssignment->musicAssignmentType = LOWER_TONE_ASSIGNMENT;
 	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
 	musicAssignment->variable = variableName;
-	return musicAssignment;
-}
-
-MusicAssignment* VariableRemoveIntegerDefinitionGrammarAction(VariableName* variableName, Expression* expression) {
-    LogDebug("VariableRemoveIntegerDefinitionGrammarAction");
-	MusicAssignment* musicAssignment = (MusicAssignment*) malloc(sizeof(MusicAssignment));
-	musicAssignment->musicAssignmentType = REMOVE_ASSIGNMENT;
-	musicAssignment->type = VARIABLE_NAME_MUSIC_ASSIGNMENT;
-	musicAssignment->variable = variableName;
-	musicAssignment->value.expression = expression;
 	return musicAssignment;
 }
 
