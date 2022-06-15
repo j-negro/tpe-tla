@@ -21,6 +21,7 @@
 	Getter* getter;
 	Constant* constant;
 	VariableName* variableName;
+	Print* print;
 
 	// Terminales
 	token token;
@@ -29,6 +30,7 @@
 	tone tone;
 	rythm rythm;
 	char *string;
+	char c;
 }
 
 %type <variableName> variableName
@@ -46,7 +48,14 @@
 %type <sentence> sentence
 %type <block> block
 %type <program> program
+%type <print> print
 
+%token <c> CHAR
+%token <token> START_STRING
+%token <token> END_STRING
+%token <token> START_COMMENT
+%token <token> END_COMMENT
+%token <token> PRINT
 
  /* IDs de los tokens generados desde Flex:
  Operadores aritméticos. */
@@ -119,7 +128,7 @@ program: block	{ ProgramGrammarAction($1); }
 	;
 	
 block: sentence block 										{$$ = BlockSentenceGrammarAction($1, $2);}
-	|										{$$ = EmptyBlockSentenceGrammarAction();}
+	|														{$$ = EmptyBlockSentenceGrammarAction();}
 	;
 
 sentence: typeDefinition SEMICOLON							{$$ = SentenceTypeDefinitionGrammarAction($1);}
@@ -130,7 +139,13 @@ sentence: typeDefinition SEMICOLON							{$$ = SentenceTypeDefinitionGrammarActi
 	| ifStatement											{$$ = SentenceIfStatementGrammarAction($1);}
 	| whileStatement										{$$ = SentenceWhileStatementGrammarAction($1);}
 	| returnLine SEMICOLON									{$$ = SentenceReturnLineGrammarAction($1);}
+	| PRINT START_STRING print END_STRING SEMICOLON 		{$$ = SentencePrintGrammarAction($3);}
+	| START_COMMENT END_COMMENT								{$$ = SentenceCommentGrammarAction();}
 	;
+
+print: CHAR print											{$$ = PrintGrammarAction($1, $2);}
+	|														{$$ = PrintEmptyGrammarAction();}
+    ;
 
 returnLine: RETURN variableName 							{$$ = ReturnVariableNameGrammarAction($2);}
 	| RETURN musicTypeDefinition							{$$ = ReturnMusicTypeDefinitionGrammarAction($2);}
@@ -162,7 +177,6 @@ expression: expression AND expression						{$$ = BooleanAndExpressionGrammarActi
 	| getter									{$$ = ExpressionGetterGrammarAction($1);}
 	;
 
-// TODO: rename to addMusic?
 addNote: variableName ADD variableName						{$$ = AddNoteGrammarAction($1, $3);}
 	;
 

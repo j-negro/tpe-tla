@@ -20,8 +20,20 @@ endline			\n
 whitespace		[ \f\n\r\t\v]
 char            [a-zA-Z_]
 
+%x COMMENT STRING
 
 %%
+
+"/*"			                            { BEGIN(COMMENT); return StartComment(); }
+<COMMENT>"*/"                               { BEGIN(INITIAL); return EndComment(); }
+\"                                          { BEGIN(STRING); return StartString(); }
+<STRING>\"                                  { BEGIN(INITIAL);  return EndString(); }
+
+<COMMENT>.                                  {  IgnoredCommentPatternAction(yytext); }
+<COMMENT>{whitespace}                       {  IgnoredCommentPatternAction(yytext); }
+<STRING>.                                   { return CharPatternAction(yytext); }
+
+"print"                                     { return PRINT; }
 
 "{"                                         { return OPEN_BRACKETS; }
 "}"                                         { return CLOSE_BRACKETS; }
