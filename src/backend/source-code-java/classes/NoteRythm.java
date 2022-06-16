@@ -1,3 +1,5 @@
+package classes;
+
 public enum NoteRythm {
     WHOLE(1, 'w'),
     HALF(0.5, 'h'),

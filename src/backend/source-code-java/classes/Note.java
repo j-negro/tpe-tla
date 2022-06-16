@@ -1,3 +1,5 @@
+package classes;
+
 public class Note implements Comparable<Note> {
 
     private NoteTone tone;

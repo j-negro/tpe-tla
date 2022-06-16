@@ -6,10 +6,12 @@ errors=( )
 cd use_cases
 for file in *
 do
-  cat "$file" | ../bin/Compiler &> ../logs/"$file".log
+  cd ..
+  cat use_cases/"$file" | bin/Compiler &> logs/"$file".log
   if [ $? -ne 0 ]; then
     errors[${#errors[@]}]=$file
   fi
+  cd use_cases
 done
 
 for error in "${errors[@]}"

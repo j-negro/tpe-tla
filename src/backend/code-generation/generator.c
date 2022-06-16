@@ -29,11 +29,12 @@ static void write_file(char * text) {
 
 void Generator(Program * program) {
     LogInfo("Generando código...");
-    yyout = fopen("Output.java", "w");
+    yyout = fopen("./src/backend/source-code-java/classes/Output.java", "w");
     if (yyout == NULL) {
         LogError("No se pudo abrir el archivo Output.java");
         return;
     }
+    write_file("package classes;\n\n");
     write_file("import org.jfugue.player.Player;\n");
     write_file("public class Output {\n");
     write_file("public static void main(String[] args) {\n");
