@@ -1,5 +1,6 @@
 #include "../support/logger.h"
 #include "generator.h"
+#include <stdlib.h>
 
 /**
  * Implementación de "generator.h".
@@ -18,6 +19,7 @@ void GenerateMusicTypeDefinition(MusicTypeDefinition * musicTypeDefinition);
 void GenerateGetter(Getter * getter);
 void GenerateConstant(Constant * constant);
 void GenerateVariableName(VariableName * variableName);
+void GeneratePrint(Print * print);
 
 
 static void write_file(char * text) {
@@ -35,7 +37,7 @@ void Generator(Program * program) {
     write_file("import org.jfugue.player.Player;\n");
     write_file("public class Output {\n");
     write_file("public static void main(String[] args) {\n");
-    write_file("String result;\n");
+    write_file("String result = \"\";\n");
 
     GenerateBlock(program->block);
 
@@ -44,6 +46,7 @@ void Generator(Program * program) {
     write_file("}\n");
 
     LogInfo("Fin.");
+    free(program);
 }
 
 void GenerateBlock(Block * block) {
@@ -55,6 +58,7 @@ void GenerateBlock(Block * block) {
             GenerateBlock(block->block);
             break;
     }
+    free(block);
 }
 
 void GenerateSentence(Sentence * sentence) {
@@ -91,7 +95,24 @@ void GenerateSentence(Sentence * sentence) {
             GenerateReturnLine(sentence->sentence);
             write_file(";\n");
             break;
+        case PRINT_SENTENCE:
+            write_file("System.out.println(\"");
+            GeneratePrint(sentence->sentence);
+            write_file("\");\n");
+            break;
+        case COMMENT_SENTENCE:
+            // Los comentarios se ignoran
+            break;
     }
+    free(sentence);
+}
+
+void GeneratePrint(Print * print) {
+    if (print->next != NULL) {
+        fprintf(yyout, "%c", print->current);
+        GeneratePrint(print->next);
+    }
+    free(print);
 }
 
 void GenerateReturnLine(ReturnLine * returnLine) {
@@ -106,6 +127,7 @@ void GenerateReturnLine(ReturnLine * returnLine) {
             break;
     }
     write_file(".toString()");
+    free(returnLine);
 }
 
 void GenerateWhileStatement(WhileStatement * whileStatement) {
@@ -113,6 +135,7 @@ void GenerateWhileStatement(WhileStatement * whileStatement) {
     GenerateExpression(whileStatement->expression);
     write_file(") {\n");
     GenerateBlock(whileStatement->block);
+    free(whileStatement);
 }
 
 void GenerateIfStatement(IfStatement * ifStatement) {
@@ -129,6 +152,7 @@ void GenerateIfStatement(IfStatement * ifStatement) {
             break;
     }
     GenerateBlock(ifStatement->block);
+    free(ifStatement);
 }
 
 void GenerateExpression(Expression * expression) {
@@ -212,6 +236,7 @@ void GenerateExpression(Expression * expression) {
             GenerateGetter(expression->value);
             break;
     }
+    free(expression);
 }
 
 void GenerateAddNote(AddNote * addNote) {
@@ -219,6 +244,7 @@ void GenerateAddNote(AddNote * addNote) {
     write_file(".addNote(");
     GenerateVariableName(addNote->note);
     write_file(")");
+    free(addNote);
 }
 
 void GenerateMusicAssignment(MusicAssignment * musicAssignment) {
@@ -312,6 +338,7 @@ void GenerateMusicAssignment(MusicAssignment * musicAssignment) {
             }
             break;
     }
+    free(musicAssignment);
 }
 
 void GenerateAssignment(Assignment * assignment) {
@@ -325,6 +352,7 @@ void GenerateAssignment(Assignment * assignment) {
     }
     write_file(" = ");
     GenerateExpression(assignment->expression);
+    free(assignment);
 }
 
 void GenerateTypeDefinition(TypeDefinition * typeDefinition) {
@@ -337,6 +365,7 @@ void GenerateTypeDefinition(TypeDefinition * typeDefinition) {
             break;
     }
     GenerateVariableName(typeDefinition->name);
+    free(typeDefinition);
 }
 
 void GenerateMusicTypeDefinition(MusicTypeDefinition * musicTypeDefinition) {
@@ -352,6 +381,7 @@ void GenerateMusicTypeDefinition(MusicTypeDefinition * musicTypeDefinition) {
             write_file(" = new Note()\n");
             break;
     }
+    free(musicTypeDefinition);
 }
 
 void GenerateGetter(Getter * getter) {
@@ -370,6 +400,7 @@ void GenerateGetter(Getter * getter) {
             write_file(".getDuration()");
             break;
     }
+    free(getter);
 }
 
 void GenerateConstant(Constant * constant) {
@@ -387,8 +418,10 @@ void GenerateConstant(Constant * constant) {
             fprintf(yyout, "'%c'", constant->value.tone.name);
             break;
     }
+    free(constant);
 }
 
 void GenerateVariableName(VariableName * variableName) {
     write_file(variableName->name);
+    free(variableName);
 }

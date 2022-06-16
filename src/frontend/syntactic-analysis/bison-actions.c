@@ -604,8 +604,8 @@ Sentence* SentenceCommentGrammarAction() {
 Print* PrintGrammarAction(char c, Print* print) {
     LogDebug("PrintGrammarAction");
     Print *ret = malloc(sizeof(Print));
-    print->current = c;
-    print->next = print;
+    ret->current = c;
+    ret->next = print;
     return ret;
 }
 
