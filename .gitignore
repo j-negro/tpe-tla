@@ -19,5 +19,6 @@ flex-scanner.c
 .idea/
 .vscode/
 *.log
+*.class
 
 Output.java
