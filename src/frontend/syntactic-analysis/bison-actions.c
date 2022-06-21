@@ -571,8 +571,8 @@ Getter * DurationGetterGrammarAction(VariableName * variableName) {
 
 VariableName * VariableNameGrammarAction(char * variable) {
     LogDebug("VariableNameGrammarAction: '%s'.", variable);
-    VariableName * variableName = malloc((sizeof(VariableName) + 1)*sizeof (char));
-    variableName->name = (char*) malloc(strlen(variable));
+    VariableName * variableName = malloc(sizeof(VariableName));
+    variableName->name = (char*) malloc((strlen(variable) + 1) * sizeof (char));
     strcpy(variableName->name, variable);
 	return variableName;
 }
