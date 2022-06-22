@@ -29,7 +29,7 @@ static void write_file(char * text) {
 
 void Generator(Program * program) {
     LogInfo("Generando código...");
-    yyout = fopen("./src/backend/source-code-java/classes/Output.java", "w");
+    yyout = fopen("src/backend/generated-java/source_classes/src/main/java/classes/Output.java", "w");
     if (yyout == NULL) {
         LogError("No se pudo abrir el archivo Output.java");
         return;

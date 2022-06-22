@@ -22,3 +22,7 @@ flex-scanner.c
 *.class
 
 Output.java
+
+src/backend/generated-java/source_classes/target/maven-status/maven-compiler-plugin/compile/default-compile/
+
+src/backend/generated-java/source_classes/target/
