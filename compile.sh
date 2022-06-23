@@ -13,7 +13,7 @@ fi
 cat "$1" | bin/Compiler &> compile.log;
 
 if [ $# -lt 2 ]; then
-  cp -r src/backend/generated-java/source_classes/ "$PWD";
+  cp -r src/backend/generated-java/source_classes/ "$PWD"/output;
   exit 0;
 fi
 
@@ -22,5 +22,5 @@ if [ -z "$2" ]; then
   exit 1;
 fi
 
-cp -r src/backend/generated-java/source_classes/ "$2";
+cp -r src/backend/generated-java/source_classes/ "$2"/output;
 exit 0;
