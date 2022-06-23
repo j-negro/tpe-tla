@@ -42,7 +42,11 @@ Para poder compilar programas en nuestro lenguaje y poder ejecutarlos, se provee
 `compile.sh`, que toma los siguientes parámetros **en orden**:
 1. El nombre del archivo a compilar.
 2. El _path_ donde se quiera copiar el directorio resultante.
-Este script generara una carpeta output en el directorio indicado o en su defecto en el directorio actual
+
+Este script generará una carpeta `output` en el directorio indicado o en su defecto en el directorio actual.
+Por otro lado, una limitación actual del proyecto es que solo se puede compilar desde el directorio base del repositorio.
+Si se intenta realizar en otro directorio, entonces la generación de código no podrá crear el proyecto _Maven_ correctamente.
+Esto se solucinará en un futuro con el uso de variables de entorno. 
    
 Luego, si se quiere ejecutar el programa, se debe entrar al proyecto resultante y ejecutar los siguientes comandos:
 1. `mvn clean package`
